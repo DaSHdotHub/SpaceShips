@@ -25,10 +25,11 @@ def print_battlefield(battlefield):
     Args:
         battlefield (list of list): The 2D list representing the battlefield.
     """
-    top_indices = '| ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' |'
-    print(top_indices)
+    top_indices = '   | ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' |'
+    print(Fore.WHITE + Back.BLUE + top_indices + Style.RESET_ALL)
     
-    for row in battlefield:
+    for i, row in enumerate(battlefield):
+        print(Fore.WHITE + Back.BLUE + f"{i + 1:2d}", end=' ' + Style.RESET_ALL)
         print(" ".join(row) + ' |')
 
 
