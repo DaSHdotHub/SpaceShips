@@ -1,4 +1,5 @@
 # import pyfiglet module 
+import string
 import pyfiglet
 #import colorama for color styling of the console
 from colorama import Fore, Back, Style
@@ -14,7 +15,7 @@ def create_battlefield(size):
     Returns:
         list of list: A 2D list representing the battlefield.
     """
-    return [['(-)' for _ in range(size)] for _ in range(size)]
+    return [['| -' for _ in range(size)] for _ in range(size)]
 
 
 def print_battlefield(battlefield):
@@ -24,8 +25,11 @@ def print_battlefield(battlefield):
     Args:
         battlefield (list of list): The 2D list representing the battlefield.
     """
+    top_indices = '| ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' |'
+    print(top_indices)
+    
     for row in battlefield:
-        print(" ".join(row))
+        print(" ".join(row) + ' |')
 
 
 def main():
