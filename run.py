@@ -5,10 +5,25 @@ from colorama import Fore, Back, Style
 
 
 def create_battlefield(size):
-    return [['~' for _ in range(size)] for _ in range(size)]
+    """
+    Create a battlefield of a given size filled with empty space (-).
+
+    Args:
+        size (int): The length and width of the battlefield.
+
+    Returns:
+        list of list: A 2D list representing the battlefield.
+    """
+    return [['(-)' for _ in range(size)] for _ in range(size)]
 
 
 def print_battlefield(battlefield):
+    """
+    Print the state of the battlefield.
+
+    Args:
+        battlefield (list of list): The 2D list representing the battlefield.
+    """
     for row in battlefield:
         print(" ".join(row))
 
