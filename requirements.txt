@@ -1,1 +1,4 @@
-# Your requirements go here
+# install fyfiglet for better title view
+pip install pyfiglet
+# install colorama for color
+pip install colorama
