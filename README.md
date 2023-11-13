@@ -1,6 +1,13 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+## Credits
+Figlet overview
+- http://www.figlet.org/examples.html
+Input for easier figlet integration - "pyfiglet"
+- https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/
+Input for coloring the console - "colorama"
+- https://www.geeksforgeeks.org/print-colors-python-terminal/
 
-Welcome,
+
+
 
 This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
 
