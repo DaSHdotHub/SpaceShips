@@ -6,6 +6,24 @@ from colorama import Fore, Back, Style
 
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 
+def get_valid_battlefield_size():
+    """
+    Prompt the user for a valid battlefield size within the specified range.
+
+    Returns:
+        int: The valid battlefield size.
+    """
+    while True:
+        try:
+            size = int(input("Enter the size of the battlefield, size should be between 5 and 10: "))
+            if size < 5 or size > 10:
+                print("Invalid input, please enter a number value between 5 and 10.")
+            else:
+                return size
+        except ValueError:
+            print("Invalid input. Please enter a valid integer size.")
+
+
 
 def create_battlefield(size):
     """
@@ -39,7 +57,7 @@ def main():
     title = pyfiglet.figlet_format("SpaceShips",font="computer") 
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
     print("\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game")
-    size = int(input("Enter the size of the battlefield: "))
+    size = get_valid_battlefield_size()
     battlefield = create_battlefield(size)
     print_battlefield(battlefield)
     
