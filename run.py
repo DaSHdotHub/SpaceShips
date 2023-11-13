@@ -1,11 +1,28 @@
 # import pyfiglet module 
 import string
+import random
 import pyfiglet
 #import colorama for color styling of the console
 from colorama import Fore, Back, Style
 
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
+
+def place_spaceship(battlefield, size):
+    """
+    Creates 'L' shaped spaceships and places them on the existing battlefield.
+
+    Args:
+        size (int): The length and width of the battlefield.
+        battlefield (list): list of lists: A 2D list representing the battlefield.
+
+        
+    """
+    while True:
+        # Create random coordinate for center of spaceship
+        spaceship_center_row = random.randint(1, size - 2)
+        spaceship_center_col = random.randint(1, size - 2)
+    
 
 def get_valid_battlefield_size():
     """
