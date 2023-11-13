@@ -10,8 +10,9 @@ RED_WHITE_STYLE = Fore.WHITE + Back.RED
 
 def place_spaceship(battlefield, size):
     """
-    Creates 'L' shaped spaceships and places them on the existing battlefield.
-
+    Creates 'L' shaped spaceships and places them on the existing battlefield, 
+    A Spaceship takes up 3 fields, 1 for the center and 1 for each wing.
+    
     Args:
         size (int): The length and width of the battlefield.
         battlefield (list): list of lists: A 2D list representing the battlefield.
@@ -20,8 +21,43 @@ def place_spaceship(battlefield, size):
     """
     while True:
         # Create random coordinate for center of spaceship
-        spaceship_center_row = random.randint(1, size - 2)
-        spaceship_center_col = random.randint(1, size - 2)
+        spaceship_center_row = random.randint(1, size - 1)
+        spaceship_center_col = random.randint(1, size - 1)
+        
+        # Assign random orientation of spaceship, there can be 4 orientation of L shaped ship
+        orientation = random.randint(1,4)
+        
+        #Orientation 1: wing down, wing right
+        if orientation == 1 and spaceship_center_row < size - 1 and spaceship_center_col < size - 2:
+            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
+                                (spaceship_center_row + 1,  spaceship_center_col),
+                                (spaceship_center_row,      spaceship_center_col + 1)]
+        #Orientation 2: wing down, wing left
+        elif orientation == 2 and spaceship_center_row < size - 1 and (spaceship_center_col < size - 1 and spaceship_center_col > 1):
+            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
+                                (spaceship_center_row + 1,  spaceship_center_col),
+                                (spaceship_center_row,      spaceship_center_col - 1)]
+        #Orientation 3: wing up, wing left
+        elif orientation == 3 and (spaceship_center_row < size - 1 and spaceship_center_row > 1) and (spaceship_center_col < size - 1 and spaceship_center_col > 1):
+            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
+                                (spaceship_center_row - 1,  spaceship_center_col),
+                                (spaceship_center_row,      spaceship_center_col - 1)]
+        #Orientation 4: wing up, wing right
+        elif orientation == 4 and (spaceship_center_row < size - 1 and spaceship_center_row > 1) and spaceship_center_col < size - 1:
+            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
+                                (spaceship_center_row - 1,  spaceship_center_col),
+                                (spaceship_center_row,      spaceship_center_col - 1)]
+        #Repick and craete new random coords
+        else:
+            continue
+        
+        # Check if spaceship_cords can be placed on battlefield
+        if all(battlefield[row][column] == '| -' for row, column in spaceship_coords):
+            for row, column in spaceship_coords:
+                battlefield[row][column] = '| o'
+            break
+        
+        
     
 
 def get_valid_battlefield_size():
@@ -79,10 +115,12 @@ def main():
     
     print('\n' + 'Your battlefield')
     battlefield = create_battlefield(size)
+    place_spaceship(battlefield, size)
     print_battlefield(battlefield, BLUE_WHITE_STYLE)
     
     print('\n' + 'Enemy battlefield')
     computer_battlefield = create_battlefield(size)
+    place_spaceship(computer_battlefield, size)
     print_battlefield(computer_battlefield, RED_WHITE_STYLE)
     
     
