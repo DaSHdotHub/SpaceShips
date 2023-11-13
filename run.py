@@ -5,6 +5,7 @@ import pyfiglet
 from colorama import Fore, Back, Style
 
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
+RED_WHITE_STYLE = Fore.WHITE + Back.RED
 
 def get_valid_battlefield_size():
     """
@@ -33,12 +34,12 @@ def create_battlefield(size):
         size (int): The length and width of the battlefield.
 
     Returns:
-        list of list: A 2D list representing the battlefield.
+        list of lists: A 2D list representing the battlefield.
     """
     return [['| -' for _ in range(size)] for _ in range(size)]
 
 
-def print_battlefield(battlefield):
+def print_battlefield(battlefield, style):
     """
     Print the state of the battlefield.
 
@@ -46,10 +47,10 @@ def print_battlefield(battlefield):
         battlefield (list of list): The 2D list representing the battlefield.
     """
     top_indices = '   || ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' |'
-    print(BLUE_WHITE_STYLE + top_indices + Style.RESET_ALL)
+    print(style + top_indices + Style.RESET_ALL)
     
     for i, row in enumerate(battlefield):
-        print(BLUE_WHITE_STYLE + f"{i + 1:2d}", end=' ' + Style.RESET_ALL + '|')
+        print(style + f"{i + 1:2d}", end=' ' + Style.RESET_ALL + '|')
         print(" ".join(row) + ' |')
 
 
@@ -58,8 +59,15 @@ def main():
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
     print("\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game")
     size = get_valid_battlefield_size()
+    
+    print('\n' + 'Your battlefield')
     battlefield = create_battlefield(size)
-    print_battlefield(battlefield)
+    print_battlefield(battlefield, BLUE_WHITE_STYLE)
+    
+    print('\n' + 'Enemy battlefield')
+    computer_battlefield = create_battlefield(size)
+    print_battlefield(computer_battlefield, RED_WHITE_STYLE)
+    
     
     
 main()
