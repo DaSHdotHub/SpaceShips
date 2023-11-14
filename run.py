@@ -108,10 +108,10 @@ def place_spaceship(battlefield, size, style):
         style (str): Style string for coloring the spaceship
     """
     while True:
-        "# Create random coordinate for center of spaceship"
+        # Create random coordinate for center of spaceship
         spaceship_center_row = random.randint(0, size - 1)
         spaceship_center_col = random.randint(0, size - 1)
-        "# Assign random orientation of spaceship, 4 orientations possible"
+        # Assign random orientation of spaceship, 4 orientations possible
         orientation = random.randint(1, 4)
         if (
             orientation == 1
@@ -151,14 +151,14 @@ def place_spaceship(battlefield, size, style):
             ]
         else:
             continue
-        "# Check if spaceship_cords can be placed on battlefield"
+        # Check if spaceship_cords can be placed on battlefield
         if all(battlefield[row][column] == "| - " for row, column in spaceship_coords):
             for row, column in spaceship_coords:
                 battlefield[row][column] = "|" + str(style + " o " + Style.RESET_ALL)
             break
 
 
-def setup_battlefields(size, numberOfShips):
+def setup_battlefields(size, number_of_ships):
     """
     Initializes battlefields for user and computer with randomly placed spaceships
     Each battlefield is represented as a 2D list,
@@ -168,12 +168,12 @@ def setup_battlefields(size, numberOfShips):
         numberOfShips (int): Amount of spaceships placed on battlefield
 
     Returns:
-        tuple: Tuple containing two lists of lists, representing the user's and the computer's battlefields
+        tuple: Tuple containing the user's and the computer's battlefields
     """
     user_battlefield = create_battlefield(size)
     computer_battlefield = create_battlefield(size)
 
-    for _ in range(numberOfShips):
+    for _ in range(number_of_ships):
         place_spaceship(user_battlefield, size, GREEN_WHITE_STYLE)
         place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
 
@@ -192,12 +192,14 @@ def get_valid_battlefield_size():
         try:
             size = int(
                 input(
-                    f"Enter the size of the battlefield, size should be between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
+                    f'Enter the size of the battlefield, size should be between'
+                    f'{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: '
                 )
             )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
                 print(
-                    f"Invalid input, please enter a number value between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
+                    f'Invalid input, please enter a number value between'
+                    f'{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}.'
                 )
             else:
                 return size
@@ -264,11 +266,10 @@ def main():
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
-    
     for _ in range(NUMBER_OF_SHIPS):
         print("\nUser's turn to fire!")
         user_turn(computer_battlefield)
-        
+
         print("\n" + "Your battlefield (after your turn)")
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
 
