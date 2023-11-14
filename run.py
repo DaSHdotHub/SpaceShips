@@ -8,9 +8,41 @@ BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
 NUMBER_OF_SHIPS = 3
+NUMBER_OF_MISSILES = NUMBER_OF_SHIPS
 BATTLEFIELD_MIN_SIZE = 4
 BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
+
+
+def fire_missile(battlefield, target):
+    """
+    Marks a field on the battlefield if hitted by a missile
+
+    Args:
+        battlefield (list of list): 2D list representing the battlefield
+        target (list of int): Coordination of 'missile impact'
+
+    Returns:
+        Bool: Returns if spaceship was hitted
+    """
+    row, col = target
+    if 'o' in battlefield[row][col]:
+        battlefield[row][col] = "| x "
+        return True
+    else:
+        print("Miss!")
+        return False
+
+
+def user_turn(battlefield):
+    hits = 0
+    for _ in range(NUMBER_OF_MISSILES):
+        target = input("Enter target coordinates (e.g., A1): ").upper()
+        row = int(target[1:]) - 1
+        col = string.ascii_uppercase.index(target[0])
+        if fire_missile(battlefield, (row, col)):
+            hits += 1
+    return hits
 
 
 def place_spaceship(battlefield, size, style):
@@ -145,6 +177,7 @@ def print_battlefield(battlefield, style, hide_ships):
     Args:
         battlefield (list of list): 2D list representing the battlefield
         style (str): Style string for coloring the output
+        hide_ships (boolean): Bool to hide ships
     """
     top_indices = (
         "   || " + " | ".join(string.ascii_uppercase[: len(battlefield)]) + " ||"
@@ -179,6 +212,11 @@ def main():
 
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
+    
+    print("\nUser's turn to fire!")
+    user_hits = user_turn(computer_battlefield)
+    print(f"\nResults:\nUser hits: {user_hits}")
+
 
 
 main()
