@@ -1,9 +1,8 @@
-import string
 import random
-# import pyfiglet module 
+import string
+
 import pyfiglet
-#import colorama for color styling of the console
-from colorama import Fore, Back, Style
+from colorama import Back, Fore, Style
 
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
@@ -15,9 +14,10 @@ BATTLEFIELD_MAX_SIZE = 10
 
 def place_spaceship(battlefield, size, style):
     """
-    Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies 3 fields,
-    with one central and side fields forming the 'L' shape. The function ensures
-    that the spaceship does not overlap with existing ships and fits within the battlefield
+    Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies
+    3 fields, with one central and side fields forming the 'L' shape. Function
+    ensures that the spaceship does not overlap with existing ships and fits
+    within the battlefield
 
     Args:
         battlefield (list of list): 2D list representing the battlefield
@@ -25,41 +25,56 @@ def place_spaceship(battlefield, size, style):
         style (str): Style string for coloring the spaceship
     """
     while True:
-        # Create random coordinate for center of spaceship
+        "# Create random coordinate for center of spaceship"
         spaceship_center_row = random.randint(0, size - 1)
         spaceship_center_col = random.randint(0, size - 1)
-        # Assign random orientation of spaceship, there can be 4 orientation of L shaped ship
+        "# Assign random orientation of spaceship, 4 orientations possible"
         orientation = random.randint(1, 4)
-        #Orientation 1: wing down, wing right
-        if orientation == 1 and spaceship_center_row < size - 1 and spaceship_center_col < size - 1:
-            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
-                                (spaceship_center_row + 1, spaceship_center_col),
-                                (spaceship_center_row, spaceship_center_col + 1)]
-        #Orientation 2: wing down, wing left
-        elif orientation == 2 and spaceship_center_row < size - 1 and spaceship_center_col > 0:
-            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
-                                (spaceship_center_row + 1, spaceship_center_col),
-                                (spaceship_center_row, spaceship_center_col - 1)]
-        #Orientation 3: wing up, wing left
+        if (
+            orientation == 1
+            and spaceship_center_row < size - 1
+            and spaceship_center_col < size - 1
+        ):
+            spaceship_coords = [
+                (spaceship_center_row, spaceship_center_col),
+                (spaceship_center_row + 1, spaceship_center_col),
+                (spaceship_center_row, spaceship_center_col + 1),
+            ]
+        elif (
+            orientation == 2
+            and spaceship_center_row < size - 1
+            and spaceship_center_col > 0
+        ):
+            spaceship_coords = [
+                (spaceship_center_row, spaceship_center_col),
+                (spaceship_center_row + 1, spaceship_center_col),
+                (spaceship_center_row, spaceship_center_col - 1),
+            ]
         elif orientation == 3 and spaceship_center_row > 0 and spaceship_center_col > 0:
-            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
-                                (spaceship_center_row - 1, spaceship_center_col),
-                                (spaceship_center_row, spaceship_center_col - 1)]
-        #Orientation 4: wing up, wing right
-        elif orientation == 4 and spaceship_center_row > 0 and spaceship_center_col < size - 1:
-            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
-                                (spaceship_center_row - 1, spaceship_center_col),
-                                (spaceship_center_row, spaceship_center_col + 1)]
-        #Repick and craete new random coords
+            spaceship_coords = [
+                (spaceship_center_row, spaceship_center_col),
+                (spaceship_center_row - 1, spaceship_center_col),
+                (spaceship_center_row, spaceship_center_col - 1),
+            ]
+        elif (
+            orientation == 4
+            and spaceship_center_row > 0
+            and spaceship_center_col < size - 1
+        ):
+            spaceship_coords = [
+                (spaceship_center_row, spaceship_center_col),
+                (spaceship_center_row - 1, spaceship_center_col),
+                (spaceship_center_row, spaceship_center_col + 1),
+            ]
         else:
             continue
-        # Check if spaceship_cords can be placed on battlefield
-        if all(battlefield[row][column] == '| - ' for row, column in spaceship_coords):
+        "# Check if spaceship_cords can be placed on battlefield"
+        if all(battlefield[row][column] == "| - " for row, column in spaceship_coords):
             for row, column in spaceship_coords:
-                battlefield[row][column] = '|' + str(style + ' o ' + Style.RESET_ALL)
+                battlefield[row][column] = "|" + str(style + " o " + Style.RESET_ALL)
             break
 
-        
+
 def setup_battlefields(size, numberOfShips):
     """
     Initializes battlefields for user and computer with randomly placed spaceships
@@ -67,7 +82,7 @@ def setup_battlefields(size, numberOfShips):
 
     Args:
         size (int): Size of the battlefield.
-        numberOfShips (int): Amount of spaceships placed on battlefield 
+        numberOfShips (int): Amount of spaceships placed on battlefield
 
     Returns:
         tuple: Tuple containing two lists of lists, representing the user's and the computer's battlefields
@@ -80,7 +95,7 @@ def setup_battlefields(size, numberOfShips):
         place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
 
     return user_battlefield, computer_battlefield
-    
+
 
 def get_valid_battlefield_size():
     """
@@ -92,14 +107,19 @@ def get_valid_battlefield_size():
     """
     while True:
         try:
-            size = int(input(f'Enter the size of the battlefield, size should be between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: '))
+            size = int(
+                input(
+                    f"Enter the size of the battlefield, size should be between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
+                )
+            )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
-                print(f'Invalid input, please enter a number value between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}.')
+                print(
+                    f"Invalid input, please enter a number value between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
+                )
             else:
                 return size
         except ValueError:
-            print('Invalid input. Please enter a valid integer size.')
-
+            print("Invalid input. Please enter a valid integer size.")
 
 
 def create_battlefield(size):
@@ -113,7 +133,7 @@ def create_battlefield(size):
     Returns:
         list of lists: 2D list representing the empty battlefield
     """
-    return [['| - ' for _ in range(size)] for _ in range(size)]
+    return [["| - " for _ in range(size)] for _ in range(size)]
 
 
 def print_battlefield(battlefield, style):
@@ -125,12 +145,14 @@ def print_battlefield(battlefield, style):
         battlefield (list of list): 2D list representing the battlefield
         style (str): Style string for coloring the output
     """
-    top_indices = '   || ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' ||'
+    top_indices = (
+        "   || " + " | ".join(string.ascii_uppercase[: len(battlefield)]) + " ||"
+    )
     print(style + top_indices + Style.RESET_ALL)
-    
+
     for i, row in enumerate(battlefield):
-        print(style + f"{i + 1:2d}", end=' ' + Style.RESET_ALL + '|')
-        print(''.join(row) + '||')
+        print(style + f"{i + 1:2d}", end=" " + Style.RESET_ALL + "|")
+        print("".join(row) + "||")
 
 
 def main():
@@ -138,19 +160,20 @@ def main():
     Main function to run the Spaceships game. It sets up the game, creates the battlefields,
     and manages the game flow.
     """
-    title = pyfiglet.figlet_format("SpaceShips",font="computer") 
+    title = pyfiglet.figlet_format("SpaceShips", font="computer")
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
-    print("\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game")
+    print(
+        "\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game"
+    )
     size = get_valid_battlefield_size()
-    
+
     user_battlefield, computer_battlefield = setup_battlefields(size, NUMBER_OF_SHIPS)
-    
-    print('\n' + 'Your battlefield')
+
+    print("\n" + "Your battlefield")
     print_battlefield(user_battlefield, BLUE_WHITE_STYLE)
-    
-    print('\n' + 'Enemy battlefield')
+
+    print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE)
 
-    
+
 main()
-    
