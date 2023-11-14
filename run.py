@@ -24,40 +24,37 @@ def place_spaceship(battlefield, size, style):
         # Create random coordinate for center of spaceship
         spaceship_center_row = random.randint(0, size - 1)
         spaceship_center_col = random.randint(0, size - 1)
-        
         # Assign random orientation of spaceship, there can be 4 orientation of L shaped ship
-        orientation = random.randint(1,4)
-        ##for debug
-        print('row ' + str(spaceship_center_row) + '  col ' + str(spaceship_center_col) + '  orient. ' + str(orientation) + '  size ' + str(size))
+        orientation = random.randint(1, 4)
         #Orientation 1: wing down, wing right
-        if orientation == 1 and spaceship_center_row < size - 1 and spaceship_center_col < size - 2:
-            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
-                                (spaceship_center_row + 1,  spaceship_center_col),
-                                (spaceship_center_row,      spaceship_center_col + 1)]
+        if orientation == 1 and spaceship_center_row < size - 1 and spaceship_center_col < size - 1:
+            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
+                                (spaceship_center_row + 1, spaceship_center_col),
+                                (spaceship_center_row, spaceship_center_col + 1)]
         #Orientation 2: wing down, wing left
-        elif orientation == 2 and spaceship_center_row < size - 1 and (spaceship_center_col < size - 1 and spaceship_center_col > 1):
-            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
-                                (spaceship_center_row + 1,  spaceship_center_col),
-                                (spaceship_center_row,      spaceship_center_col - 1)]
+        elif orientation == 2 and spaceship_center_row < size - 1 and spaceship_center_col > 0:
+            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
+                                (spaceship_center_row + 1, spaceship_center_col),
+                                (spaceship_center_row, spaceship_center_col - 1)]
         #Orientation 3: wing up, wing left
-        elif orientation == 3 and (spaceship_center_row < size - 1 and spaceship_center_row > 1) and (spaceship_center_col < size - 1 and spaceship_center_col > 1):
-            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
-                                (spaceship_center_row - 1,  spaceship_center_col),
-                                (spaceship_center_row,      spaceship_center_col - 1)]
+        elif orientation == 3 and spaceship_center_row > 0 and spaceship_center_col > 0:
+            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
+                                (spaceship_center_row - 1, spaceship_center_col),
+                                (spaceship_center_row, spaceship_center_col - 1)]
         #Orientation 4: wing up, wing right
-        elif orientation == 4 and (spaceship_center_row < size - 1 and spaceship_center_row > 1) and spaceship_center_col < size - 1:
-            spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
-                                (spaceship_center_row - 1,  spaceship_center_col),
-                                (spaceship_center_row,      spaceship_center_col + 1)]
+        elif orientation == 4 and spaceship_center_row > 0 and spaceship_center_col < size - 1:
+            spaceship_coords = [(spaceship_center_row, spaceship_center_col),
+                                (spaceship_center_row - 1, spaceship_center_col),
+                                (spaceship_center_row, spaceship_center_col + 1)]
         #Repick and craete new random coords
         else:
             continue
-        
         # Check if spaceship_cords can be placed on battlefield
         if all(battlefield[row][column] == '| - ' for row, column in spaceship_coords):
             for row, column in spaceship_coords:
                 battlefield[row][column] = '|' + str(style + ' o ' + Style.RESET_ALL)
             break
+
         
 def setup_battlefields(size):
     """_summary_
