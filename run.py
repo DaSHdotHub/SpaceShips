@@ -14,35 +14,60 @@ BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
 
 
-def fire_missile(battlefield, target):
+def fire_missile(battlefield, target, previous_attempts):
     """
     Marks a field on the battlefield if hitted by a missile
 
     Args:
         battlefield (list of list): 2D list representing the battlefield
         target (list of int): Coordination of 'missile impact'
+        previous_attempts (set): Previously hitted fields
 
     Returns:
         Bool: Returns if spaceship was hitted
     """
     row, col = target
+    if (row, col) in previous_attempts:
+        print("Field already targeted. Choose another target.")
+        return False, "repeat"
+    previous_attempts.add((row, col))
+
     if 'o' in battlefield[row][col]:
         battlefield[row][col] = "| x "
-        return True
+        return True, "hit"
     else:
-        print("Miss!")
-        return False
+        battlefield[row][col] = "| * "
+        return False, "miss"
 
 
 def user_turn(battlefield):
+    """
+    Enables a turn for the user and runs a given amount of times the
+    fire_missile() function
+
+    Args:
+        battlefield (list of list): 2D list representing the battlefield
+
+    Returns:
+        _int_: Returns the number of hits
+    """
     hits = 0
+    previous_attempts = set()
     for _ in range(NUMBER_OF_MISSILES):
-        target = input("Enter target coordinates (e.g., A1): ").upper()
-        row = int(target[1:]) - 1
-        col = string.ascii_uppercase.index(target[0])
-        if fire_missile(battlefield, (row, col)):
+        while True:
+            target = input("Enter target coordinates (e.g., A1): ").upper()
+            row = int(target[1:]) - 1
+            col = string.ascii_uppercase.index(target[0])
+
+            valid, result = fire_missile(battlefield, (row, col), previous_attempts)
+            if valid and result != "repeat":
+                break
+
+        if result == "hit":
             hits += 1
+
     return hits
+
 
 
 def place_spaceship(battlefield, size, style):
