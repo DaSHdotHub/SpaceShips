@@ -1,6 +1,5 @@
 import random
 import string
-
 import pyfiglet
 from colorama import Back, Fore, Style
 
@@ -9,6 +8,7 @@ RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
 NUMBER_OF_SHIPS = 3
 NUMBER_OF_MISSILES = NUMBER_OF_SHIPS
+NUMBER_OF_SHIP_SEGMENTS = NUMBER_OF_SHIPS * 3
 BATTLEFIELD_MIN_SIZE = 4
 BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
@@ -266,15 +266,19 @@ def main():
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
-    for _ in range(NUMBER_OF_SHIPS):
+    user_hits = 0
+    while user_hits < NUMBER_OF_SHIP_SEGMENTS:
         print("\nUser's turn to fire!")
-        user_turn(computer_battlefield)
+        user_hits += user_turn(computer_battlefield)
 
-        print("\n" + "Your battlefield (after your turn)")
+        print("\n" + "Your battlefield")
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
 
-        print("\n" + "Enemy battlefield (hidden)")
+        print("\n" + "Enemy battlefield")
         print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
+        if user_hits == NUMBER_OF_SHIP_SEGMENTS:
+            print("All enemy spacecraft destroyed. You win!")
+            break
 
 main()
