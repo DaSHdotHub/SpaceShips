@@ -8,8 +8,9 @@ BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
 NUMBER_OF_SHIPS = 3
-BATTLEFIELD_MIN_SIZE = 5
+BATTLEFIELD_MIN_SIZE = 4
 BATTLEFIELD_MAX_SIZE = 10
+HIDE_COMPUTER_SHIPS = True
 
 
 def place_spaceship(battlefield, size, style):
@@ -136,7 +137,7 @@ def create_battlefield(size):
     return [["| - " for _ in range(size)] for _ in range(size)]
 
 
-def print_battlefield(battlefield, style):
+def print_battlefield(battlefield, style, hide_ships):
     """
     Prints the current state of the battlefield, displayed with
     row and column indicators, each cell shows its current state
@@ -152,8 +153,12 @@ def print_battlefield(battlefield, style):
 
     for i, row in enumerate(battlefield):
         print(style + f"{i + 1:2d}", end=" " + Style.RESET_ALL + "|")
-        print("".join(row) + "||")
-
+        for cell in row:
+            if hide_ships and 'o' in cell:
+                print("| - ", end="")
+            else:
+                print(cell, end="")
+        print("||")
 
 def main():
     """
@@ -170,10 +175,10 @@ def main():
     user_battlefield, computer_battlefield = setup_battlefields(size, NUMBER_OF_SHIPS)
 
     print("\n" + "Your battlefield")
-    print_battlefield(user_battlefield, BLUE_WHITE_STYLE)
+    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
 
     print("\n" + "Enemy battlefield")
-    print_battlefield(computer_battlefield, RED_WHITE_STYLE)
+    print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
 
 main()
