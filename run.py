@@ -1,6 +1,6 @@
-# import pyfiglet module 
 import string
 import random
+# import pyfiglet module 
 import pyfiglet
 #import colorama for color styling of the console
 from colorama import Fore, Back, Style
@@ -8,17 +8,21 @@ from colorama import Fore, Back, Style
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
+NUMBER_OF_SHIPS = 3
+BATTLEFIELD_MIN_SIZE = 5
+BATTLEFIELD_MAX_SIZE = 10
+
 
 def place_spaceship(battlefield, size, style):
     """
-    Creates 'L' shaped spaceships and places them on the existing battlefield, 
-    A Spaceship takes up 3 fields, 1 for the center and 1 for each wing.
-    
-    Args:
-        size (int): The length and width of the battlefield.
-        battlefield (list): list of lists: A 2D list representing the battlefield.
+    Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies 3 fields,
+    with one central and side fields forming the 'L' shape. The function ensures
+    that the spaceship does not overlap with existing ships and fits within the battlefield
 
-        
+    Args:
+        battlefield (list of list): 2D list representing the battlefield
+        size (int): Size of the battlefield (number of rows and columns)
+        style (str): Style string for coloring the spaceship
     """
     while True:
         # Create random coordinate for center of spaceship
@@ -56,20 +60,22 @@ def place_spaceship(battlefield, size, style):
             break
 
         
-def setup_battlefields(size):
-    """_summary_
+def setup_battlefields(size, numberOfShips):
+    """
+    Initializes battlefields for user and computer with randomly placed spaceships
+    Each battlefield is represented as a 2D list,
 
     Args:
-        battlefield (_type_): _description_
-        size (_type_): _description_
+        size (int): Size of the battlefield.
+        numberOfShips (int): Amount of spaceships placed on battlefield 
 
     Returns:
-        _type_: _description_
+        tuple: Tuple containing two lists of lists, representing the user's and the computer's battlefields
     """
     user_battlefield = create_battlefield(size)
     computer_battlefield = create_battlefield(size)
 
-    for _ in range(3):
+    for _ in range(numberOfShips):
         place_spaceship(user_battlefield, size, GREEN_WHITE_STYLE)
         place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
 
@@ -78,42 +84,46 @@ def setup_battlefields(size):
 
 def get_valid_battlefield_size():
     """
-    Prompt the user for a valid battlefield size within the specified range.
+    Prompts user to enter a valid battlefield size, must be within a specified range
+    Continuously asks for input until a valid size is entered
 
     Returns:
-        int: The valid battlefield size.
+        int: The validated size of the battlefield entered by the user
     """
     while True:
         try:
-            size = int(input("Enter the size of the battlefield, size should be between 5 and 10: "))
-            if size < 5 or size > 10:
-                print("Invalid input, please enter a number value between 5 and 10.")
+            size = int(input(f'Enter the size of the battlefield, size should be between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: '))
+            if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
+                print(f'Invalid input, please enter a number value between {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}.')
             else:
                 return size
         except ValueError:
-            print("Invalid input. Please enter a valid integer size.")
+            print('Invalid input. Please enter a valid integer size.')
 
 
 
 def create_battlefield(size):
     """
-    Create a battlefield of a given size filled with empty space ' - '.
+    Creates an empty battlefield of a given size, represented as a 2D list,
+    with each cell initialized to an empty state
 
     Args:
-        size (int): The length and width of the battlefield.
+        size (int): Size of the battlefield (number of rows and columns)
 
     Returns:
-        list of lists: A 2D list representing the battlefield.
+        list of lists: 2D list representing the empty battlefield
     """
     return [['| - ' for _ in range(size)] for _ in range(size)]
 
 
 def print_battlefield(battlefield, style):
     """
-    Print the state of the battlefield.
+    Prints the current state of the battlefield, displayed with
+    row and column indicators, each cell shows its current state
 
     Args:
-        battlefield (list of list): The 2D list representing the battlefield.
+        battlefield (list of list): 2D list representing the battlefield
+        style (str): Style string for coloring the output
     """
     top_indices = '   || ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' ||'
     print(style + top_indices + Style.RESET_ALL)
@@ -124,12 +134,16 @@ def print_battlefield(battlefield, style):
 
 
 def main():
+    """
+    Main function to run the Spaceships game. It sets up the game, creates the battlefields,
+    and manages the game flow.
+    """
     title = pyfiglet.figlet_format("SpaceShips",font="computer") 
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
     print("\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game")
     size = get_valid_battlefield_size()
     
-    user_battlefield, computer_battlefield = setup_battlefields(size)
+    user_battlefield, computer_battlefield = setup_battlefields(size, NUMBER_OF_SHIPS)
     
     print('\n' + 'Your battlefield')
     print_battlefield(user_battlefield, BLUE_WHITE_STYLE)
