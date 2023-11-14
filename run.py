@@ -24,7 +24,7 @@ def fire_missile(battlefield, target, previous_attempts):
         previous_attempts (set): Previously hitted fields
 
     Returns:
-        Bool: Returns if spaceship was hitted
+        Bool: Returns if spaceship was hitted, missed, target invalid (repeated or out of range)
     """
     row, col = target
     if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
@@ -36,7 +36,7 @@ def fire_missile(battlefield, target, previous_attempts):
         return False, "repeat"
     previous_attempts.add((row, col))
 
-    if 'o' in battlefield[row][col]:
+    if "o" in battlefield[row][col]:
         battlefield[row][col] = "| x "
         return True, "hit"
     else:
@@ -57,21 +57,42 @@ def user_turn(battlefield):
     """
     hits = 0
     previous_attempts = set()
-    for _ in range(NUMBER_OF_MISSILES):
-        while True:
-            target = input("Enter target coordinates (e.g., A1): ").upper()
-            row = int(target[1:]) - 1
-            col = string.ascii_uppercase.index(target[0])
+    hits = 0
+    previous_attempts = set()
+    attempts = 0
 
-            valid, result = fire_missile(battlefield, (row, col), previous_attempts)
-            if valid and result != "repeat":
-                break
+    while attempts < NUMBER_OF_SHIPS:
+        target_input = input("Enter target coordinates (e.g., A1): ").upper()
 
-        if result == "hit":
+        if (
+            len(target_input) < 2
+            or not target_input[0].isalpha()
+            or not target_input[1:].isdigit()
+        ):
+            print("Invalid format. Please enter coordinates like 'A1'.")
+            continue
+
+        row = int(target_input[1:]) - 1
+        col = string.ascii_uppercase.index(target_input[0])
+
+        if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
+            print("Target out of range. Please choose a target within the battlefield.")
+            continue
+
+        if (row, col) in previous_attempts:
+            print("Field already targeted. Choose another target.")
+            continue
+
+        previous_attempts.add((row, col))
+        attempts += 1
+
+        if "o" in battlefield[row][col]:
+            battlefield[row][col] = "| X "
             hits += 1
+        else:
+            battlefield[row][col] = "| * "
 
     return hits
-
 
 
 def place_spaceship(battlefield, size, style):
@@ -216,11 +237,12 @@ def print_battlefield(battlefield, style, hide_ships):
     for i, row in enumerate(battlefield):
         print(style + f"{i + 1:2d}", end=" " + Style.RESET_ALL + "|")
         for cell in row:
-            if hide_ships and 'o' in cell:
+            if hide_ships and "o" in cell:
                 print("| - ", end="")
             else:
                 print(cell, end="")
         print("||")
+
 
 def main():
     """
@@ -241,11 +263,10 @@ def main():
 
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
-    
+
     print("\nUser's turn to fire!")
     user_hits = user_turn(computer_battlefield)
     print(f"\nResults:\nUser hits: {user_hits}")
-
 
 
 main()
