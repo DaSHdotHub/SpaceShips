@@ -22,8 +22,8 @@ def place_spaceship(battlefield, size, style):
     """
     while True:
         # Create random coordinate for center of spaceship
-        spaceship_center_row = random.randint(1, size - 1)
-        spaceship_center_col = random.randint(1, size - 1)
+        spaceship_center_row = random.randint(0, size - 1)
+        spaceship_center_col = random.randint(0, size - 1)
         
         # Assign random orientation of spaceship, there can be 4 orientation of L shaped ship
         orientation = random.randint(1,4)
@@ -59,7 +59,24 @@ def place_spaceship(battlefield, size, style):
                 battlefield[row][column] = '|' + str(style + ' o ' + Style.RESET_ALL)
             break
         
-        
+def setup_battlefields(size):
+    """_summary_
+
+    Args:
+        battlefield (_type_): _description_
+        size (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    user_battlefield = create_battlefield(size)
+    computer_battlefield = create_battlefield(size)
+
+    for _ in range(3):
+        place_spaceship(user_battlefield, size, GREEN_WHITE_STYLE)
+        place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
+
+    return user_battlefield, computer_battlefield
     
 
 def get_valid_battlefield_size():
@@ -115,14 +132,12 @@ def main():
     print("\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game")
     size = get_valid_battlefield_size()
     
+    user_battlefield, computer_battlefield = setup_battlefields(size)
+    
     print('\n' + 'Your battlefield')
-    battlefield = create_battlefield(size)
-    place_spaceship(battlefield, size, GREEN_WHITE_STYLE)
-    print_battlefield(battlefield, BLUE_WHITE_STYLE)
+    print_battlefield(user_battlefield, BLUE_WHITE_STYLE)
     
     print('\n' + 'Enemy battlefield')
-    computer_battlefield = create_battlefield(size)
-    place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
     print_battlefield(computer_battlefield, RED_WHITE_STYLE)
 
     
