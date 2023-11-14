@@ -264,9 +264,16 @@ def main():
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
-    print("\nUser's turn to fire!")
-    user_hits = user_turn(computer_battlefield)
-    print(f"\nResults:\nUser hits: {user_hits}")
+    
+    for _ in range(NUMBER_OF_SHIPS):
+        print("\nUser's turn to fire!")
+        user_turn(computer_battlefield)
+        
+        print("\n" + "Your battlefield (after your turn)")
+        print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
+
+        print("\n" + "Enemy battlefield (hidden)")
+        print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
 
 main()
