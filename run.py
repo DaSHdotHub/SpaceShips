@@ -27,6 +27,10 @@ def fire_missile(battlefield, target, previous_attempts):
         Bool: Returns if spaceship was hitted
     """
     row, col = target
+    if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
+        print("Target out of range. Choose a target within the battlefield.")
+        return False, "out-of-range"
+
     if (row, col) in previous_attempts:
         print("Field already targeted. Choose another target.")
         return False, "repeat"
