@@ -7,8 +7,9 @@ from colorama import Fore, Back, Style
 
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
+GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
 
-def place_spaceship(battlefield, size):
+def place_spaceship(battlefield, size, style):
     """
     Creates 'L' shaped spaceships and places them on the existing battlefield, 
     A Spaceship takes up 3 fields, 1 for the center and 1 for each wing.
@@ -26,7 +27,8 @@ def place_spaceship(battlefield, size):
         
         # Assign random orientation of spaceship, there can be 4 orientation of L shaped ship
         orientation = random.randint(1,4)
-        
+        ##for debug
+        print('row ' + str(spaceship_center_row) + '  col ' + str(spaceship_center_col) + '  orient. ' + str(orientation) + '  size ' + str(size))
         #Orientation 1: wing down, wing right
         if orientation == 1 and spaceship_center_row < size - 1 and spaceship_center_col < size - 2:
             spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
@@ -46,15 +48,15 @@ def place_spaceship(battlefield, size):
         elif orientation == 4 and (spaceship_center_row < size - 1 and spaceship_center_row > 1) and spaceship_center_col < size - 1:
             spaceship_coords = [(spaceship_center_row,      spaceship_center_col),
                                 (spaceship_center_row - 1,  spaceship_center_col),
-                                (spaceship_center_row,      spaceship_center_col - 1)]
+                                (spaceship_center_row,      spaceship_center_col + 1)]
         #Repick and craete new random coords
         else:
             continue
         
         # Check if spaceship_cords can be placed on battlefield
-        if all(battlefield[row][column] == '| -' for row, column in spaceship_coords):
+        if all(battlefield[row][column] == '| - ' for row, column in spaceship_coords):
             for row, column in spaceship_coords:
-                battlefield[row][column] = '| o'
+                battlefield[row][column] = '|' + str(style + ' o ' + Style.RESET_ALL)
             break
         
         
@@ -89,7 +91,7 @@ def create_battlefield(size):
     Returns:
         list of lists: A 2D list representing the battlefield.
     """
-    return [['| -' for _ in range(size)] for _ in range(size)]
+    return [['| - ' for _ in range(size)] for _ in range(size)]
 
 
 def print_battlefield(battlefield, style):
@@ -99,12 +101,12 @@ def print_battlefield(battlefield, style):
     Args:
         battlefield (list of list): The 2D list representing the battlefield.
     """
-    top_indices = '   || ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' |'
+    top_indices = '   || ' + ' | '.join(string.ascii_uppercase[:len(battlefield)]) + ' ||'
     print(style + top_indices + Style.RESET_ALL)
     
     for i, row in enumerate(battlefield):
         print(style + f"{i + 1:2d}", end=' ' + Style.RESET_ALL + '|')
-        print(" ".join(row) + ' |')
+        print(''.join(row) + '||')
 
 
 def main():
@@ -115,15 +117,14 @@ def main():
     
     print('\n' + 'Your battlefield')
     battlefield = create_battlefield(size)
-    place_spaceship(battlefield, size)
+    place_spaceship(battlefield, size, GREEN_WHITE_STYLE)
     print_battlefield(battlefield, BLUE_WHITE_STYLE)
     
     print('\n' + 'Enemy battlefield')
     computer_battlefield = create_battlefield(size)
-    place_spaceship(computer_battlefield, size)
+    place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
     print_battlefield(computer_battlefield, RED_WHITE_STYLE)
-    
-    
+
     
 main()
     
