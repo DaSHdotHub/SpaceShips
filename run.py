@@ -44,7 +44,7 @@ def fire_missile(battlefield, target, previous_attempts):
         return False, "miss"
 
 
-def user_turn(battlefield):
+def user_turn(battlefield, previous_attempts):
     """
     Enables a turn for the user and runs a given amount of times the
     fire_missile() function
@@ -56,12 +56,9 @@ def user_turn(battlefield):
         _int_: Returns the number of hits
     """
     hits = 0
-    previous_attempts = set()
-    hits = 0
-    previous_attempts = set()
-    attempts = 0
+    missiles_fired = 0
 
-    while attempts < NUMBER_OF_SHIPS:
+    while missiles_fired < NUMBER_OF_MISSILES:
         target_input = input("Enter target coordinates (e.g., A1): ").upper()
 
         if (
@@ -84,7 +81,7 @@ def user_turn(battlefield):
             continue
 
         previous_attempts.add((row, col))
-        attempts += 1
+        missiles_fired += 1
 
         if "o" in battlefield[row][col]:
             battlefield[row][col] = "| X "
@@ -267,9 +264,10 @@ def main():
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
     user_hits = 0
+    user_previous_attempts = set()
     while user_hits < NUMBER_OF_SHIP_SEGMENTS:
         print("\nUser's turn to fire!")
-        user_hits += user_turn(computer_battlefield)
+        user_hits += user_turn(computer_battlefield, user_previous_attempts)
 
         print("\n" + "Your battlefield")
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
