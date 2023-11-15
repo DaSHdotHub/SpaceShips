@@ -1,5 +1,6 @@
 import random
 import string
+import math
 import pyfiglet
 from colorama import Back, Fore, Style
 
@@ -70,7 +71,7 @@ def turn_validated_input(battlefield, turn_data):
             print("Field already targeted. Choose another target.")
             row, col = None, None
             continue
-        
+
     turn_data["previous_attempts"].add((row, col))
     return (row, col)
 
@@ -229,7 +230,7 @@ def create_battlefield(size):
     return [["| - " for _ in range(size)] for _ in range(size)]
 
 
-def print_battlefield(battlefield, style, hide_ships):
+def print_battlefield(battlefield, style, hide_ships, name):
     """
     Prints the current state of the battlefield, displayed with
     row and column indicators, each cell shows its current state
@@ -239,6 +240,14 @@ def print_battlefield(battlefield, style, hide_ships):
         style (str): Style string for coloring the output
         hide_ships (boolean): Bool to hide ships
     """
+    bname = style + f"{name.upper()} BATTLEFIELD" + Style.RESET_ALL
+    b_topdown = (
+        "##" * (len(battlefield) - BATTLEFIELD_MIN_SIZE) * 2 + "######################"
+    )
+    b_left = "#" * math.ceil((len(b_topdown) - len(name + " battlefield")) / 2)
+    b_right = "#" * math.floor((len(b_topdown) - len(name + " battlefield")) / 2)
+
+    print("\n" + b_topdown + "\n" + b_left + bname + b_right + "\n" + b_topdown)
     top_indices = (
         "   || " + " | ".join(string.ascii_uppercase[: len(battlefield)]) + " ||"
     )
@@ -267,23 +276,21 @@ def main():
     size = get_valid_battlefield_size()
 
     user_battlefield, computer_battlefield = setup_battlefields(size, NUMBER_OF_SHIPS)
-
-    print("\n" + "Your battlefield")
-    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
-
-    print("\n" + "Enemy battlefield")
-    print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
+    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
+    print_battlefield(
+        computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
+    )
 
     user_turn_data = {"total_hits": 0, "previous_attempts": set()}
     while user_turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS:
         print("\nUser's turn to fire!")
         user_turn(computer_battlefield, user_turn_data)
-
         print("\n" + "Your battlefield")
-        print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
-
+        print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
         print("\n" + "Enemy battlefield")
-        print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
+        print_battlefield(
+            computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
+        )
 
         if user_turn_data["total_hits"] == NUMBER_OF_SHIP_SEGMENTS:
             print("All enemy spacecraft destroyed. You win!")
