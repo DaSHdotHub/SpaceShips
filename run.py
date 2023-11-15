@@ -35,6 +35,46 @@ def fire_missile(battlefield, target):
         return "miss"
 
 
+def turn_validated_input(battlefield, turn_data):
+    """
+    Prompts the user for target coordinates until valid input is given.
+
+    Args:
+        battlefield (list of list): 2D list representing the battlefield.
+        turn_data (dict): Dictionary containing data about the current turn.
+
+    Returns:
+        tuple: A tuple (row, col) representing the validated target coordinates.
+    """
+    row, col = None, None
+    while row is None or col is None:
+        target_input = input("Enter target coordinates (e.g., A1): ").upper()
+        if (
+            len(target_input) < 2
+            or not target_input[0].isalpha()
+            or not target_input[1:].isdigit()
+        ):
+            print("Invalid format. Please enter coordinates like 'A1'.")
+            row, col = None, None
+            continue
+
+        row = int(target_input[1:]) - 1
+        col = string.ascii_uppercase.index(target_input[0])
+
+        if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
+            print("Target out of range. Please choose a target within the battlefield.")
+            row, col = None, None
+            continue
+
+        if (row, col) in turn_data["previous_attempts"]:
+            print("Field already targeted. Choose another target.")
+            row, col = None, None
+            continue
+        
+    turn_data["previous_attempts"].add((row, col))
+    return (row, col)
+
+
 def user_turn(battlefield, turn_data):
     """
     Enables a turn for the user and runs a given amount of times the
@@ -50,31 +90,9 @@ def user_turn(battlefield, turn_data):
 
     while (
         missiles_fired < NUMBER_OF_MISSILES
-        #and turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS
+        and turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS
     ):
-        target_input = input("Enter target coordinates (e.g., A1): ").upper()
-
-        if (
-            len(target_input) < 2
-            or not target_input[0].isalpha()
-            or not target_input[1:].isdigit()
-        ):
-            print("Invalid format. Please enter coordinates like 'A1'.")
-            continue
-
-        row = int(target_input[1:]) - 1
-        col = string.ascii_uppercase.index(target_input[0])
-
-        if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
-            print("Target out of range. Please choose a target within the battlefield.")
-            continue
-
-        if (row, col) in turn_data["previous_attempts"]:
-            print("Field already targeted. Choose another target.")
-            continue
-
-        turn_data["previous_attempts"].add((row, col))
-
+        row, col = turn_validated_input(battlefield, turn_data)
         result = fire_missile(battlefield, (row, col))
         missiles_fired += 1
         if result == "hit":
@@ -182,7 +200,7 @@ def get_valid_battlefield_size():
         try:
             size = int(
                 input(
-                    f"Enter the size of the battlefield, size should be between"
+                    f"Enter the size of the battlefield, size should be between "
                     f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
                 )
             )
