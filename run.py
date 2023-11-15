@@ -17,14 +17,15 @@ HIDE_COMPUTER_SHIPS = True
 
 def fire_missile(battlefield, target, style):
     """
-    Marks a field on the battlefield if hitted by a missile
+    Marks a field on the battlefield as hit or miss when a missile is fired.
 
     Args:
-        battlefield (list of list): 2D list representing the battlefield
-        target (list of int): Coordination of 'missile impact'
+        battlefield (list of list): 2D list representing the battlefield.
+        target (tuple of int): Coordinates (row, col) of the missile impact.
+        style (str): Style string for coloring the hit marker.
 
     Returns:
-        Bool: Returns if spaceship was hitted or missed
+        str: Returns 'hit' if a spaceship was hit, otherwise 'miss'.
     """
     row, col = target
 
@@ -38,14 +39,16 @@ def fire_missile(battlefield, target, style):
 
 def turn_validated_input(battlefield, turn_data):
     """
-    Prompts the user for target coordinates until valid input is given.
+    Continuously prompts the user for target coordinates until valid and untargeted 
+    coordinates are given. Also updates the turn data with the new attempt.
 
     Args:
         battlefield (list of list): 2D list representing the battlefield.
-        turn_data (dict): Dictionary containing data about the current turn.
+        turn_data (dict): Dictionary containing data about the current turn, 
+                          including previously attempted targets.
 
     Returns:
-        tuple: A tuple (row, col) representing the validated target coordinates.
+        tuple: Validated target coordinates (row, col).
     """
     row, col = None, None
     while row is None or col is None:
@@ -78,14 +81,17 @@ def turn_validated_input(battlefield, turn_data):
 
 def user_turn(battlefield, turn_data):
     """
-    Enables a turn for the user and runs a given amount of times the
-    fire_missile() function
+    Manages the user's turn in the game, allowing them to fire missiles until 
+    they run out of missiles or hit all spaceship segments.
 
     Args:
-        battlefield (list of list): 2D list representing the battlefield
+        battlefield (list of list): 2D list representing the enemy's battlefield.
+        turn_data (dict): Dictionary containing data about the current turn, 
+                          including total hits and previous attempts.
 
     Returns:
-        _int_: Returns the number of hits
+        None: This function does not return a value but updates the battlefield 
+              and turn_data in-place.
     """
     missiles_fired = 0
 
@@ -239,6 +245,7 @@ def print_battlefield(battlefield, style, hide_ships, name):
         battlefield (list of list): 2D list representing the battlefield
         style (str): Style string for coloring the output
         hide_ships (boolean): Bool to hide ships
+        name (str): Display name above battlefield grid
     """
     bname = style + f"{name.upper()} BATTLEFIELD" + Style.RESET_ALL
     b_topdown = (
@@ -285,9 +292,7 @@ def main():
     while user_turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS:
         print("\nUser's turn to fire!")
         user_turn(computer_battlefield, user_turn_data)
-        print("\n" + "Your battlefield")
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
-        print("\n" + "Enemy battlefield")
         print_battlefield(
             computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
         )
