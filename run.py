@@ -14,37 +14,28 @@ BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
 
 
-def fire_missile(battlefield, target, previous_attempts):
+def fire_missile(battlefield, target):
     """
     Marks a field on the battlefield if hitted by a missile
 
     Args:
         battlefield (list of list): 2D list representing the battlefield
         target (list of int): Coordination of 'missile impact'
-        previous_attempts (set): Previously hitted fields
 
     Returns:
-        Bool: Returns if spaceship was hitted, missed, target invalid (repeated or out of range)
+        Bool: Returns if spaceship was hitted or missed
     """
     row, col = target
-    if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
-        print("Target out of range. Choose a target within the battlefield.")
-        return False, "out-of-range"
-
-    if (row, col) in previous_attempts:
-        print("Field already targeted. Choose another target.")
-        return False, "repeat"
-    previous_attempts.add((row, col))
 
     if "o" in battlefield[row][col]:
         battlefield[row][col] = "| x "
-        return True, "hit"
+        return "hit"
     else:
         battlefield[row][col] = "| * "
-        return False, "miss"
+        return "miss"
 
 
-def user_turn(battlefield, previous_attempts):
+def user_turn(battlefield, turn_data):
     """
     Enables a turn for the user and runs a given amount of times the
     fire_missile() function
@@ -55,10 +46,12 @@ def user_turn(battlefield, previous_attempts):
     Returns:
         _int_: Returns the number of hits
     """
-    hits = 0
     missiles_fired = 0
 
-    while missiles_fired < NUMBER_OF_MISSILES:
+    while (
+        missiles_fired < NUMBER_OF_MISSILES
+        #and turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS
+    ):
         target_input = input("Enter target coordinates (e.g., A1): ").upper()
 
         if (
@@ -76,20 +69,20 @@ def user_turn(battlefield, previous_attempts):
             print("Target out of range. Please choose a target within the battlefield.")
             continue
 
-        if (row, col) in previous_attempts:
+        if (row, col) in turn_data["previous_attempts"]:
             print("Field already targeted. Choose another target.")
             continue
 
-        previous_attempts.add((row, col))
+        turn_data["previous_attempts"].add((row, col))
+
+        result = fire_missile(battlefield, (row, col))
         missiles_fired += 1
+        if result == "hit":
+            turn_data["total_hits"] += 1
 
-        if "o" in battlefield[row][col]:
-            battlefield[row][col] = "| X "
-            hits += 1
-        else:
-            battlefield[row][col] = "| * "
-
-    return hits
+        if turn_data["total_hits"] == NUMBER_OF_SHIP_SEGMENTS:
+            print("All enemy ships have been hit!")
+            break
 
 
 def place_spaceship(battlefield, size, style):
@@ -189,14 +182,14 @@ def get_valid_battlefield_size():
         try:
             size = int(
                 input(
-                    f'Enter the size of the battlefield, size should be between'
-                    f'{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: '
+                    f"Enter the size of the battlefield, size should be between"
+                    f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
                 )
             )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
                 print(
-                    f'Invalid input, please enter a number value between'
-                    f'{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}.'
+                    f"Invalid input, please enter a number value between"
+                    f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
                 )
             else:
                 return size
@@ -263,11 +256,10 @@ def main():
     print("\n" + "Enemy battlefield")
     print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
-    user_hits = 0
-    user_previous_attempts = set()
-    while user_hits < NUMBER_OF_SHIP_SEGMENTS:
+    user_turn_data = {"total_hits": 0, "previous_attempts": set()}
+    while user_turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS:
         print("\nUser's turn to fire!")
-        user_hits += user_turn(computer_battlefield, user_previous_attempts)
+        user_turn(computer_battlefield, user_turn_data)
 
         print("\n" + "Your battlefield")
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False)
@@ -275,8 +267,9 @@ def main():
         print("\n" + "Enemy battlefield")
         print_battlefield(computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS)
 
-        if user_hits == NUMBER_OF_SHIP_SEGMENTS:
+        if user_turn_data["total_hits"] == NUMBER_OF_SHIP_SEGMENTS:
             print("All enemy spacecraft destroyed. You win!")
             break
+
 
 main()
