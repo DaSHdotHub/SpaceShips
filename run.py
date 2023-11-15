@@ -14,7 +14,7 @@ BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
 
 
-def fire_missile(battlefield, target):
+def fire_missile(battlefield, target, style):
     """
     Marks a field on the battlefield if hitted by a missile
 
@@ -28,7 +28,7 @@ def fire_missile(battlefield, target):
     row, col = target
 
     if "o" in battlefield[row][col]:
-        battlefield[row][col] = "| x "
+        battlefield[row][col] = "|" + str(style + " x " + Style.RESET_ALL)
         return "hit"
     else:
         battlefield[row][col] = "| * "
@@ -93,7 +93,7 @@ def user_turn(battlefield, turn_data):
         and turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS
     ):
         row, col = turn_validated_input(battlefield, turn_data)
-        result = fire_missile(battlefield, (row, col))
+        result = fire_missile(battlefield, (row, col), GREEN_WHITE_STYLE)
         missiles_fired += 1
         if result == "hit":
             turn_data["total_hits"] += 1
