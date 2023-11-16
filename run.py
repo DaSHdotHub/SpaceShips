@@ -1,9 +1,11 @@
+# Imports
 import random
 import string
 import math
 import pyfiglet
 from colorama import Back, Fore, Style
 
+# Constants
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
@@ -15,6 +17,109 @@ BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
 USERNAME_LENGTH_FLOOR = 3
 USERNAME_LENGTH_CEIL = 8
+
+
+class SpaceShipsGame:
+    def __init__(self, size, number_of_ships, username):
+        self.size = size
+        self.number_of_ships = number_of_ships
+        self.number_of_ship_segments = NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+        self.user_battlefield = self.create_battlefield()
+        self.computer_battlefield = self.create_battlefield()
+        self.username = username
+        self.user_turn_data = {
+            "total_hits": 0,
+            "previous_attempts": set(),
+            "number_of_turns": 0,
+        }
+        self.computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
+
+        for _ in range(number_of_ships):
+            self.place_spaceship(self.user_battlefield, GREEN_WHITE_STYLE)
+            self.place_spaceship(self.computer_battlefield, RED_WHITE_STYLE)
+
+    def create_battlefield(self):
+        """
+        Creates an empty battlefield of a given size, represented as a 2D list,
+        with each cell initialized to an empty state
+
+        Args:
+            size (int): Size of the battlefield (number of rows and columns)
+
+        Returns:
+        list of lists: 2D list representing the empty battlefield
+        """
+        return [["| - " for _ in range(self.size)] for _ in range(self.size)]
+
+    def place_spaceship(self, battlefield, style):
+        """
+        Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies
+        3 fields, with one central and side fields forming the 'L' shape. Function
+        ensures that the spaceship does not overlap with existing ships and fits
+        within the battlefield
+
+        Args:
+            battlefield (list of list): 2D list representing the battlefield
+            size (int): Size of the battlefield (number of rows and columns)
+            style (str): Style string for coloring the spaceship
+        """
+        while True:
+            # Create random coordinate for center of spaceship
+            spaceship_center_row = random.randint(0, self.size - 1)
+            spaceship_center_col = random.randint(0, self.size - 1)
+            # Assign random orientation of spaceship, 4 orientations possible
+            orientation = random.randint(1, 4)
+            if (
+                orientation == 1
+                and spaceship_center_row < self.size - 1
+                and spaceship_center_col < self.size - 1
+            ):
+                spaceship_coords = [
+                    (spaceship_center_row, spaceship_center_col),
+                    (spaceship_center_row + 1, spaceship_center_col),
+                    (spaceship_center_row, spaceship_center_col + 1),
+                ]
+            elif (
+                orientation == 2
+                and spaceship_center_row < self.size - 1
+                and spaceship_center_col > 0
+            ):
+                spaceship_coords = [
+                    (spaceship_center_row, spaceship_center_col),
+                    (spaceship_center_row + 1, spaceship_center_col),
+                    (spaceship_center_row, spaceship_center_col - 1),
+                ]
+            elif (
+                orientation == 3
+                and spaceship_center_row > 0
+                and spaceship_center_col > 0
+            ):
+                spaceship_coords = [
+                    (spaceship_center_row, spaceship_center_col),
+                    (spaceship_center_row - 1, spaceship_center_col),
+                    (spaceship_center_row, spaceship_center_col - 1),
+                ]
+            elif (
+                orientation == 4
+                and spaceship_center_row > 0
+                and spaceship_center_col < self.size - 1
+            ):
+                spaceship_coords = [
+                    (spaceship_center_row, spaceship_center_col),
+                    (spaceship_center_row - 1, spaceship_center_col),
+                    (spaceship_center_row, spaceship_center_col + 1),
+                ]
+            else:
+                continue
+            # Check if spaceship_cords can be placed on battlefield
+            if all(
+                battlefield[row][column] == "| - " for row, column in spaceship_coords
+            ):
+                for row, column in spaceship_coords:
+                    battlefield[row][column] = "|" + str(
+                        style + " o " + Style.RESET_ALL
+                    )
+                    break
 
 
 def fire_missile(battlefield, target, style):
