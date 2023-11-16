@@ -13,6 +13,8 @@ NUMBER_OF_DEFAULT_SHIP_SEGMENTS = 3
 BATTLEFIELD_MIN_SIZE = 4
 BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
+USERNAME_LENGTH_FLOOR = 3
+USERNAME_LENGTH_CEIL = 8
 
 
 def fire_missile(battlefield, target, style):
@@ -114,7 +116,7 @@ def computer_turn(battlefield, copmuter_turn_data, number_of_ship_segments):
 
 def user_turn(battlefield, turn_data, number_of_ship_segments):
     """
-    Manages the user's turn in the game, allowing them to fire missiles until
+    Manages the user's turn in the game, allowing them to fire missiles until‚
     they run out of missiles or hit all spaceship segments.
 
     Args:
@@ -228,6 +230,30 @@ def setup_battlefields(size, number_of_ships):
     return user_battlefield, computer_battlefield
 
 
+def get_valid_username():
+    """
+    Prompts the user to enter a username that meets the length criteria
+
+    The function continuously requests input until the user provides a username that meets
+    the length requirements defined by USERNAME_LENGTH_FLOOR and USERNAME_LENGTH_CEIL.
+
+    Returns:
+        str: The validated username that meets the length requirements.
+    """
+    while True:
+        username = input(
+            f"Enter your chosen username, length between {USERNAME_LENGTH_FLOOR} "
+            + f"and {USERNAME_LENGTH_CEIL} chars: "
+        )
+        if (
+            len(username) < USERNAME_LENGTH_FLOOR
+            or len(username) > USERNAME_LENGTH_CEIL
+        ):
+            print("Your username does not meet the length requirement")
+        else:
+            return username
+
+
 def get_valid_game_size():
     """
     Prompts user to enter a valid battlefield size, must be within a specified range
@@ -321,10 +347,11 @@ def main():
     print(
         "\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game"
     )
+    username = get_valid_username()
     size, number_of_ships, number_of_ship_segments = get_valid_game_size()
 
     user_battlefield, computer_battlefield = setup_battlefields(size, number_of_ships)
-    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
+    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, username)
 
     print_battlefield(
         computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
@@ -349,7 +376,13 @@ def main():
         )
 
         if user_turn_data["total_hits"] == number_of_ship_segments:
-            print("All enemy spacecraft destroyed. You win!")
+            print(
+                "\n"
+                + "\n"
+                + f"Congratulations {username.upper()}"
+                + "\n"
+                + "All enemy spacecraft destroyed. You win!"
+            )
             break
         elif computer_turn_data["total_hits"] == number_of_ship_segments:
             print("All your spacecraft destroyed. Computer wins!")
