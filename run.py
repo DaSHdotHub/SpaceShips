@@ -32,7 +32,9 @@ class SpaceShipsGame:
             "previous_attempts": set(),
             "number_of_turns": 0,
         }
-        self.computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
+        self.computer_turn_data = {
+            "total_hits": 0,
+            "previous_attempts": set()}
 
         for _ in range(number_of_ships):
             self.place_spaceship(self.user_battlefield, GREEN_WHITE_STYLE)
@@ -121,7 +123,7 @@ class SpaceShipsGame:
                     )
                     break
 
-    def fire_missile(battlefield, target, style):
+    def fire_missile(self, battlefield, target, style):
         """
         Marks a field on the battlefield as hit or miss when a missile is fired.
 
@@ -142,7 +144,7 @@ class SpaceShipsGame:
             battlefield[row][col] = "| * "
             return "miss"
 
-    def turn_validated_input(self, battlefield):
+    def turn_validated_input(self, battlefield, turn_data):
         """
         Continuously prompts the user for target coordinates until valid and untargeted
         coordinates are given. Also updates the turn data with the new attempt.
@@ -182,15 +184,15 @@ class SpaceShipsGame:
                 row, col = None, None
                 continue
 
-            if (row, col) in self.turn_data["previous_attempts"]:
+            if (row, col) in turn_data["previous_attempts"]:
                 print("Field already targeted. Choose another target.")
                 row, col = None, None
                 continue
 
-            self.turn_data["previous_attempts"].add((row, col))
-            return (row, col)
+            turn_data["previous_attempts"].add((row, col))
+            return row, col
 
-    def computer_turn(battlefield, self):
+    def computer_turn(self):
         """
         Manages the computer's turn in the game, randomly firing missiles at the user's battlefield.
 
@@ -204,7 +206,7 @@ class SpaceShipsGame:
                 and turn_data in-place.
         """
         missiles_fired = 0
-        size = len(battlefield)
+        size = len(self.user_battlefield)
         while (
             missiles_fired < NUMBER_OF_MISSILES
             and self.computer_turn_data["total_hits"] < self.number_of_ship_segments
@@ -214,7 +216,7 @@ class SpaceShipsGame:
                 continue
 
             self.computer_turn_data["previous_attempts"].add((row, col))
-            result = fire_missile(battlefield, (row, col), RED_WHITE_STYLE)
+            result = self.fire_missile(self.user_battlefield, (row, col), RED_WHITE_STYLE)
             missiles_fired += 1
             if result == "hit":
                 self.computer_turn_data["total_hits"] += 1
@@ -225,7 +227,7 @@ class SpaceShipsGame:
                     print("All your ships have been hit! Computer wins!")
                     break
 
-    def user_turn(battlefield, self):
+    def user_turn(self):
         """
         Manages the user's turn in the game, allowing them to fire missiles until‚
         they run out of missiles or hit all spaceship segments.
@@ -240,43 +242,22 @@ class SpaceShipsGame:
                 and turn_data in-place.
         """
         missiles_fired = 0
-        self.turn_data["number_of_turns"] += 1
+        self.user_turn_data["number_of_turns"] += 1
         while (
             missiles_fired < NUMBER_OF_MISSILES
-            and self.turn_data["total_hits"] < number_of_ship_segments
+            and self.user_turn_data["total_hits"] < self.number_of_ship_segments
         ):
-            row, col = turn_validated_input(battlefield, turn_data)
-            result = fire_missile(battlefield, (row, col), GREEN_WHITE_STYLE)
+            row, col = self.turn_validated_input(self.computer_battlefield, self.user_turn_data)
+            result = self.fire_missile(self.computer_battlefield, (row, col), GREEN_WHITE_STYLE)
             missiles_fired += 1
             if result == "hit":
-                turn_data["total_hits"] += 1
+                self.user_turn_data["total_hits"] += 1
 
-            if turn_data["total_hits"] == number_of_ship_segments:
+            if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
                 print("All enemy ships have been hit!")
                 break
 
-    def setup_battlefields(size, number_of_ships):
-        """
-        Initializes battlefields for user and computer with randomly placed spaceships
-        Each battlefield is represented as a 2D list,
-
-        Args:
-            size (int): Size of the battlefield.
-            numberOfShips (int): Amount of spaceships placed on battlefield
-
-        Returns:
-            tuple: Tuple containing the user's and the computer's battlefields
-        """
-        user_battlefield = create_battlefield(size)
-        computer_battlefield = create_battlefield(size)
-
-        for _ in range(number_of_ships):
-            place_spaceship(user_battlefield, size, GREEN_WHITE_STYLE)
-            place_spaceship(computer_battlefield, size, RED_WHITE_STYLE)
-
-        return user_battlefield, computer_battlefield
-
-    def print_battlefield(battlefield, style, hide_ships, name):
+    def print_battlefield(self, battlefield, style, hide_ships, name):
         """
         Prints the current state of the battlefield, displayed with
         row and column indicators, each cell shows its current state
