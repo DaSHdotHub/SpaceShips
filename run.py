@@ -79,6 +79,39 @@ def turn_validated_input(battlefield, turn_data):
     return (row, col)
 
 
+def computer_turn(battlefield, copmuter_turn_data, number_of_ship_segments):
+    """
+    Manages the computer's turn in the game, randomly firing missiles at the user's battlefield.
+
+    Args:
+        battlefield (list of list): 2D list representing the user's battlefield.
+        turn_data (dict): Dictionary containing data about the computer's current turn,
+                          including total hits and previous attempts.
+
+    Returns:
+        None: This function does not return a value but updates the battlefield
+              and turn_data in-place.
+    """
+    missiles_fired = 0
+    size = len(battlefield)
+    while (
+        missiles_fired < NUMBER_OF_MISSILES
+        and copmuter_turn_data["total_hits"] < number_of_ship_segments
+    ):
+        row, col = random.randint(0, size - 1), random.randint(0, size - 1)
+        if (row, col) in copmuter_turn_data["previous_attempts"]:
+            continue
+
+        copmuter_turn_data["previous_attempts"].add((row, col))
+        result = fire_missile(battlefield, (row, col), RED_WHITE_STYLE)
+        missiles_fired += 1
+        if result == "hit":
+            copmuter_turn_data["total_hits"] += 1
+            if copmuter_turn_data["total_hits"] == number_of_ship_segments:
+                print("All your ships have been hit! Computer wins!")
+                break
+
+
 def user_turn(battlefield, turn_data, number_of_ship_segments):
     """
     Manages the user's turn in the game, allowing them to fire missiles until
@@ -202,6 +235,8 @@ def get_valid_game_size():
 
     Returns:
         int: The validated size of the battlefield entered by the user
+        int: Number of spaceships participating for each player
+        int: Number of ship segments based on the number of spaceships.
     """
     while True:
         try:
@@ -217,8 +252,12 @@ def get_valid_game_size():
                     f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
                 )
             else:
-                number_of_ships = size - (BATTLEFIELD_MIN_SIZE - NUMBER_OF_DEFAULT_SHIPS)
-                number_of_ship_segments = NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+                number_of_ships = size - (
+                    BATTLEFIELD_MIN_SIZE - NUMBER_OF_DEFAULT_SHIPS
+                )
+                number_of_ship_segments = (
+                    NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+                )
                 return size, number_of_ships, number_of_ship_segments
         except ValueError:
             print("Invalid input. Please enter a valid integer size.")
@@ -286,14 +325,24 @@ def main():
 
     user_battlefield, computer_battlefield = setup_battlefields(size, number_of_ships)
     print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
+
     print_battlefield(
         computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
     )
 
     user_turn_data = {"total_hits": 0, "previous_attempts": set(), "number_of_turns": 0}
-    while user_turn_data["total_hits"] < number_of_ship_segments:
+    computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
+
+    while (
+        user_turn_data["total_hits"] < number_of_ship_segments
+        and computer_turn_data["total_hits"] < number_of_ship_segments
+    ):
         print("\nUser's turn to fire!")
         user_turn(computer_battlefield, user_turn_data, number_of_ship_segments)
+
+        print("\nComputer's turn to fire!")
+        computer_turn(user_battlefield, computer_turn_data, number_of_ship_segments)
+
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
         print_battlefield(
             computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
@@ -301,6 +350,9 @@ def main():
 
         if user_turn_data["total_hits"] == number_of_ship_segments:
             print("All enemy spacecraft destroyed. You win!")
+            break
+        elif computer_turn_data["total_hits"] == number_of_ship_segments:
+            print("All your spacecraft destroyed. Computer wins!")
             break
 
 
