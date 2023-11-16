@@ -1,39 +1,59 @@
-## Credits
-Figlet overview
-- http://www.figlet.org/examples.html
-Input for easier figlet integration - "pyfiglet"
-- https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/
-Input for coloring the console - "colorama"
-- https://www.geeksforgeeks.org/print-colors-python-terminal/
+# SpaceShips Game
 
+## Introduction
+SpaceShips is a variant of the classic "Battleship" game where players aim to destroy enemy ships by guessing their locations. The objective is to defend spaceships while attempting to disable enemy ships by firing missiles.
 
+## Technologies and Libraries Used
+### Python Standard Libraries
+- `random`: For generating random numbers (ship placement, computer's moves).
+- `string`: Handling strings, particularly for battlefield coordinates.
+- `math`: Used for mathematical operations in print formatting.
 
+### External Libraries
+- `pyfiglet`: Creating ASCII art titles.
+- `colorama`: Adding color and styles to the console output.
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+## Key Features and Algorithms
+- **SpaceShip Class**: Manages the game state, including battlefield setup, ship placement, and turn management.
+- **Ship Placement Algorithm**: Places 'L'-shaped ships randomly, ensuring they fit and don't overlap.
+- **Missile Firing Logic**: Marks hits or misses on the battlefield.
+- **User Input Validation**: Ensures valid targeting and username creation inputs.
+- **Turn-Based Gameplay**: Alternates turns between the user and the computer.
 
-## Reminders
+## Project Structure
+- **Constants and Styles**: Defined for easy modification (number of ships, color styles).
+- **Class `SpaceShipsGame`**: Core of the game with methods for gameplay.
+- **Utility Functions**: `get_valid_username`, `get_valid_game_size`, `display_rules` for game setup.
+- **Main Function**: Orchestrates game setup and play loop.
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+## Unique Aspects to Highlight
+- **ASCII Art and Colorful Console Output**: Enhances the user experience.
+- **Adaptive Game Size and Number of Ships**: Dynamically adjusts based on battlefield size.
+- **Customizable Styles**: Uses `colorama` for easy aesthetic customization.
 
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
+## Deployment
+- **Heroku**: For deployment it is needed to add two buildpacks from the _Settings_ tab.
+    1. `heroku/python`
+    2. `heroku/nodejs`
+    __________________
+    For deployment it is also needed to create the _Config Var_ called `PORT`. Set this to `8000`
+    __________________
+    For this repository, no credentials were used so far, in case thouse will be added in the future it is necesarry to create in Heroku a _Config Var_ called `CREDS` and paste the JSON into the value field.
+    __________________
+    After e.g. the GitHub repository was connected and the correct repo was chosen it can be deployed as normal.
 
 ## Constraints
 
 The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
 
----
+## Credits
 
-Happy coding!
+- **The deployment** process was taken from the template linked in this github-repo.
+
+- **Figlet** were used for Creating ASCII art titles [click here fore examples on figlet.org](http://www.figlet.org/examples.html)
+
+- **Pyfiglet** for easier figlet integration - "pyfiglet" import was used, find more information on [geeksforgeeks.org](https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/)
+- **Colorama** for bringing more than black and white to the console, have a look at [geeksforgeeks.org](https://www.geeksforgeeks.org/print-colors-python-terminal/)
+
+
+
