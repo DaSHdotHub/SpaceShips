@@ -387,6 +387,8 @@ def get_valid_username(style):
     The function continuously requests input until the user provides a username that meets
     the length requirements defined by USERNAME_LENGTH_FLOOR and USERNAME_LENGTH_CEIL.
 
+    Args:
+        style (str): Style string for coloring the output
     Returns:
         str: The validated username that meets the length requirements.
     """
@@ -442,6 +444,13 @@ def get_valid_game_size():
 def display_rules(style, username):
     """
     Display an introduction and rules how the game should be played.
+
+    Args:
+        style (str): Style string for coloring the output
+        username (str): Username of the player.
+
+    Return:
+        No return, outputs game information on the console.
     """
     L_SHIP = "\u255a"
     print(
