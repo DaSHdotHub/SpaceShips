@@ -122,68 +122,68 @@ class SpaceShipsGame:
                     break
 
 
-def fire_missile(battlefield, target, style):
-    """
-    Marks a field on the battlefield as hit or miss when a missile is fired.
+        def fire_missile(battlefield, target, style):
+            """
+            Marks a field on the battlefield as hit or miss when a missile is fired.
 
-    Args:
-        battlefield (list of list): 2D list representing the battlefield.
-        target (tuple of int): Coordinates (row, col) of the missile impact.
-        style (str): Style string for coloring the hit marker.
+            Args:
+                battlefield (list of list): 2D list representing the battlefield.
+                target (tuple of int): Coordinates (row, col) of the missile impact.
+                style (str): Style string for coloring the hit marker.
 
-    Returns:
-        str: Returns 'hit' if a spaceship was hit, otherwise 'miss'.
-    """
-    row, col = target
+            Returns:
+                str: Returns 'hit' if a spaceship was hit, otherwise 'miss'.
+            """
+            row, col = target
 
-    if "o" in battlefield[row][col]:
-        battlefield[row][col] = "|" + str(style + " x " + Style.RESET_ALL)
-        return "hit"
-    else:
-        battlefield[row][col] = "| * "
-        return "miss"
+            if "o" in battlefield[row][col]:
+                battlefield[row][col] = "|" + str(style + " x " + Style.RESET_ALL)
+                return "hit"
+            else:
+                battlefield[row][col] = "| * "
+                return "miss"
 
 
-def turn_validated_input(battlefield, turn_data):
-    """
-    Continuously prompts the user for target coordinates until valid and untargeted
-    coordinates are given. Also updates the turn data with the new attempt.
+        def turn_validated_input(self, battlefield):
+            """
+            Continuously prompts the user for target coordinates until valid and untargeted
+            coordinates are given. Also updates the turn data with the new attempt.
 
-    Args:
-        battlefield (list of list): 2D list representing the battlefield.
-        turn_data (dict): Dictionary containing data about the current turn,
+            Args:
+                battlefield (list of list): 2D list representing the battlefield.
+                turn_data (dict): Dictionary containing data about the current turn,
                           including previously attempted targets.
 
-    Returns:
-        tuple: Validated target coordinates (row, col).
-    """
-    row, col = None, None
-    while row is None or col is None:
-        target_input = input("Enter target coordinates (e.g., A1): ").upper()
-        if (
-            len(target_input) < 2
-            or not target_input[0].isalpha()
-            or not target_input[1:].isdigit()
-        ):
-            print("Invalid format. Please enter coordinates like 'A1'.")
+            Returns:
+                tuple: Validated target coordinates (row, col).
+            """
             row, col = None, None
-            continue
+            while row is None or col is None:
+                target_input = input("Enter target coordinates (e.g., A1): ").upper()
+                if (
+                    len(target_input) < 2
+                    or not target_input[0].isalpha()
+                    or not target_input[1:].isdigit()
+                ):
+                    print("Invalid format. Please enter coordinates like 'A1'.")
+                    row, col = None, None
+                    continue
 
-        row = int(target_input[1:]) - 1
-        col = string.ascii_uppercase.index(target_input[0])
+                row = int(target_input[1:]) - 1
+                col = string.ascii_uppercase.index(target_input[0])
 
-        if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
-            print("Target out of range. Please choose a target within the battlefield.")
-            row, col = None, None
-            continue
+                if row < 0 or row >= len(battlefield) or col < 0 or col >= len(battlefield[0]):
+                    print("Target out of range. Please choose a target within the battlefield.")
+                    row, col = None, None
+                    continue
 
-        if (row, col) in turn_data["previous_attempts"]:
-            print("Field already targeted. Choose another target.")
-            row, col = None, None
-            continue
+                if (row, col) in self.turn_data["previous_attempts"]:
+                    print("Field already targeted. Choose another target.")
+                    row, col = None, None
+                    continue
 
-    turn_data["previous_attempts"].add((row, col))
-    return (row, col)
+                self.turn_data["previous_attempts"].add((row, col))
+                return (row, col)
 
 
 def computer_turn(battlefield, computer_turn_data, number_of_ship_segments):
