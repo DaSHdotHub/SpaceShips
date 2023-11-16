@@ -3,6 +3,18 @@
 ## Introduction
 SpaceShips is a variant of the classic "Battleship" game where players aim to destroy enemy ships by guessing their locations. The objective is to defend spaceships while attempting to disable enemy ships by firing missiles.
 
+![Responsive Mock](assets/media/responsive.webp)
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Technologies and Libraries Used](#technologies-and-libraries-used)
+  - [Python Standard Libraries](#python-standard-libraries)
+  - [External Libraries](#external-libraries)
+- [Key Features and Algorithms](#key-features-and-algorithms)
+- [Project Structure](#project-structure)
+- [Unique Aspects to Highlight](#unique-aspects-to-highlight)
+
 ## Technologies and Libraries Used
 ### Python Standard Libraries
 - `random`: For generating random numbers (ship placement, computer's moves).
@@ -54,6 +66,4 @@ The deployment terminal is set to 80 columns by 24 rows. That means that each li
 
 - **Pyfiglet** for easier figlet integration - "pyfiglet" import was used, find more information on [geeksforgeeks.org](https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/)
 - **Colorama** for bringing more than black and white to the console, have a look at [geeksforgeeks.org](https://www.geeksforgeeks.org/print-colors-python-terminal/)
-
-
-
+- **ui.dev** for the responsive mock for this documentation, try it on [ui.dev/amiresponsive?](https://ui.dev/amiresponsive?)
