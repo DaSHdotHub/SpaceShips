@@ -296,6 +296,36 @@ class SpaceShipsGame:
                     print(cell, end="")
             print("||")
 
+    def generate_turn_summary(self):
+        """
+        Generates and prints a summary of the attempts and hits for both the user and the computer.
+        """
+
+        def format_attempts(attempts):
+            return ", ".join(
+                [string.ascii_uppercase[col] + str(row + 1) for row, col in attempts]
+            )
+
+        user_attempts = format_attempts(self.user_turn_data["previous_attempts"])
+        computer_attempts = format_attempts(
+            self.computer_turn_data["previous_attempts"]
+        )
+
+        user_hits = sum(
+            1
+            for row, col in self.user_turn_data["previous_attempts"]
+            if "x" in self.computer_battlefield[row][col]
+        )
+        computer_hits = sum(
+            1
+            for row, col in self.computer_turn_data["previous_attempts"]
+            if "x" in self.user_battlefield[row][col]
+        )
+
+        print("\nTurn Summary:")
+        print(f"User fired on fields {user_attempts}. Hits: {user_hits}.")
+        print(f"Computer fired on fields {computer_attempts}. Hits: {computer_hits}.")
+
     def play_round(self):
         """
         Executes a single round of the game, which involves both the user's and computer's turns.
@@ -305,6 +335,7 @@ class SpaceShipsGame:
         The round progresses as follows:
         - User's turn: User attempts to hit computer's ships.
         - Computer's turn: Computer attempts to hit user's ships (if user hasn't won yet).
+        - Round is finished, a summary is printed.
         """
         self.print_battlefield(
             self.user_battlefield, BLUE_WHITE_STYLE, False, self.username
@@ -320,6 +351,8 @@ class SpaceShipsGame:
             self.computer_turn()
         else:
             return
+
+        self.generate_turn_summary()
 
     def check_winner(self):
         """
