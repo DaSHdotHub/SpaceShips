@@ -458,7 +458,6 @@ def display_rules(style, username):
         + style
         + "Welcome to SpaceShips, a variant of the classic BattleShip game."
         + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips crossing"
-        ,"
         + f"\nenemy territory against the enemy forces. You're convoy are {L_SHIP}-class spaceships."
         + "\nMost likely youre enemy uses the same"
         + "\nThere will be also no intel on their orientation!"
