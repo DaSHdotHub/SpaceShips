@@ -7,9 +7,9 @@ from colorama import Back, Fore, Style
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
-NUMBER_OF_SHIPS = 3
-NUMBER_OF_MISSILES = NUMBER_OF_SHIPS
-NUMBER_OF_SHIP_SEGMENTS = NUMBER_OF_SHIPS * 3
+NUMBER_OF_DEFAULT_SHIPS = 3
+NUMBER_OF_MISSILES = NUMBER_OF_DEFAULT_SHIPS
+NUMBER_OF_DEFAULT_SHIP_SEGMENTS = 3
 BATTLEFIELD_MIN_SIZE = 4
 BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
@@ -39,12 +39,12 @@ def fire_missile(battlefield, target, style):
 
 def turn_validated_input(battlefield, turn_data):
     """
-    Continuously prompts the user for target coordinates until valid and untargeted 
+    Continuously prompts the user for target coordinates until valid and untargeted
     coordinates are given. Also updates the turn data with the new attempt.
 
     Args:
         battlefield (list of list): 2D list representing the battlefield.
-        turn_data (dict): Dictionary containing data about the current turn, 
+        turn_data (dict): Dictionary containing data about the current turn,
                           including previously attempted targets.
 
     Returns:
@@ -79,25 +79,25 @@ def turn_validated_input(battlefield, turn_data):
     return (row, col)
 
 
-def user_turn(battlefield, turn_data):
+def user_turn(battlefield, turn_data, number_of_ship_segments):
     """
-    Manages the user's turn in the game, allowing them to fire missiles until 
+    Manages the user's turn in the game, allowing them to fire missiles until
     they run out of missiles or hit all spaceship segments.
 
     Args:
         battlefield (list of list): 2D list representing the enemy's battlefield.
-        turn_data (dict): Dictionary containing data about the current turn, 
+        turn_data (dict): Dictionary containing data about the current turn,
                           including total hits and previous attempts.
 
     Returns:
-        None: This function does not return a value but updates the battlefield 
+        None: This function does not return a value but updates the battlefield
               and turn_data in-place.
     """
     missiles_fired = 0
-
+    turn_data["number_of_turns"] += 1
     while (
         missiles_fired < NUMBER_OF_MISSILES
-        and turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS
+        and turn_data["total_hits"] < number_of_ship_segments
     ):
         row, col = turn_validated_input(battlefield, turn_data)
         result = fire_missile(battlefield, (row, col), GREEN_WHITE_STYLE)
@@ -105,7 +105,7 @@ def user_turn(battlefield, turn_data):
         if result == "hit":
             turn_data["total_hits"] += 1
 
-        if turn_data["total_hits"] == NUMBER_OF_SHIP_SEGMENTS:
+        if turn_data["total_hits"] == number_of_ship_segments:
             print("All enemy ships have been hit!")
             break
 
@@ -195,7 +195,7 @@ def setup_battlefields(size, number_of_ships):
     return user_battlefield, computer_battlefield
 
 
-def get_valid_battlefield_size():
+def get_valid_game_size():
     """
     Prompts user to enter a valid battlefield size, must be within a specified range
     Continuously asks for input until a valid size is entered
@@ -217,7 +217,9 @@ def get_valid_battlefield_size():
                     f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
                 )
             else:
-                return size
+                number_of_ships = size - (BATTLEFIELD_MIN_SIZE - NUMBER_OF_DEFAULT_SHIPS)
+                number_of_ship_segments = NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+                return size, number_of_ships, number_of_ship_segments
         except ValueError:
             print("Invalid input. Please enter a valid integer size.")
 
@@ -280,24 +282,24 @@ def main():
     print(
         "\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game"
     )
-    size = get_valid_battlefield_size()
+    size, number_of_ships, number_of_ship_segments = get_valid_game_size()
 
-    user_battlefield, computer_battlefield = setup_battlefields(size, NUMBER_OF_SHIPS)
+    user_battlefield, computer_battlefield = setup_battlefields(size, number_of_ships)
     print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
     print_battlefield(
         computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
     )
 
-    user_turn_data = {"total_hits": 0, "previous_attempts": set()}
-    while user_turn_data["total_hits"] < NUMBER_OF_SHIP_SEGMENTS:
+    user_turn_data = {"total_hits": 0, "previous_attempts": set(), "number_of_turns": 0}
+    while user_turn_data["total_hits"] < number_of_ship_segments:
         print("\nUser's turn to fire!")
-        user_turn(computer_battlefield, user_turn_data)
+        user_turn(computer_battlefield, user_turn_data, number_of_ship_segments)
         print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
         print_battlefield(
             computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
         )
 
-        if user_turn_data["total_hits"] == NUMBER_OF_SHIP_SEGMENTS:
+        if user_turn_data["total_hits"] == number_of_ship_segments:
             print("All enemy spacecraft destroyed. You win!")
             break
 
