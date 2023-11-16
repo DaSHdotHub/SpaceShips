@@ -81,7 +81,7 @@ def turn_validated_input(battlefield, turn_data):
     return (row, col)
 
 
-def computer_turn(battlefield, copmuter_turn_data, number_of_ship_segments):
+def computer_turn(battlefield, computer_turn_data, number_of_ship_segments):
     """
     Manages the computer's turn in the game, randomly firing missiles at the user's battlefield.
 
@@ -98,18 +98,18 @@ def computer_turn(battlefield, copmuter_turn_data, number_of_ship_segments):
     size = len(battlefield)
     while (
         missiles_fired < NUMBER_OF_MISSILES
-        and copmuter_turn_data["total_hits"] < number_of_ship_segments
+        and computer_turn_data["total_hits"] < number_of_ship_segments
     ):
         row, col = random.randint(0, size - 1), random.randint(0, size - 1)
-        if (row, col) in copmuter_turn_data["previous_attempts"]:
+        if (row, col) in computer_turn_data["previous_attempts"]:
             continue
 
-        copmuter_turn_data["previous_attempts"].add((row, col))
+        computer_turn_data["previous_attempts"].add((row, col))
         result = fire_missile(battlefield, (row, col), RED_WHITE_STYLE)
         missiles_fired += 1
         if result == "hit":
-            copmuter_turn_data["total_hits"] += 1
-            if copmuter_turn_data["total_hits"] == number_of_ship_segments:
+            computer_turn_data["total_hits"] += 1
+            if computer_turn_data["total_hits"] == number_of_ship_segments:
                 print("All your ships have been hit! Computer wins!")
                 break
 
@@ -339,7 +339,7 @@ def print_battlefield(battlefield, style, hide_ships, name):
 
 def main():
     """
-    Main function to run the Spaceships game. It sets up the game, creates the battlefields,
+    Main function to run the SpaceShips game. It sets up the game, creates the battlefields,
     and manages the game flow.
     """
     title = pyfiglet.figlet_format("SpaceShips", font="computer")
