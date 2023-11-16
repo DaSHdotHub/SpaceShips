@@ -6,6 +6,8 @@ import pyfiglet
 from colorama import Back, Fore, Style
 
 # Constants
+MAGENTA_CYAN_STYLE = Fore.CYAN + Style.BRIGHT + Back.MAGENTA
+MAGENTA_WHITE_STYLE = Fore.WHITE + Style.BRIGHT + Back.MAGENTA
 BLUE_WHITE_STYLE = Fore.WHITE + Back.BLUE
 RED_WHITE_STYLE = Fore.WHITE + Back.RED
 GREEN_WHITE_STYLE = Fore.WHITE + Back.GREEN
@@ -378,7 +380,7 @@ class SpaceShipsGame:
             self.play_round()
 
 
-def get_valid_username():
+def get_valid_username(style):
     """
     Prompts the user to enter a username that meets the length criteria
 
@@ -390,8 +392,11 @@ def get_valid_username():
     """
     while True:
         username = input(
-            f"Enter your chosen username, length between {USERNAME_LENGTH_FLOOR} "
-            + f"and {USERNAME_LENGTH_CEIL} chars: "
+            style
+            + "\n\nWhat your name captain?, enter a username with a length between"
+            + f" {USERNAME_LENGTH_FLOOR} "
+            + f"and {USERNAME_LENGTH_CEIL} characters: "
+            + Style.RESET_ALL
         )
         if (
             len(username) < USERNAME_LENGTH_FLOOR
@@ -434,6 +439,28 @@ def get_valid_game_size():
             print("Invalid input. Please enter a valid integer size.")
 
 
+def display_rules(style, username):
+    """
+    Display an introduction and rules how the game should be played.
+    """
+    L_SHIP = "\u255a"
+    print(
+        "\n\n"
+        + style
+        + "Welcome to SpaceShips, a variant of the classic BattleShip game."
+        + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips crossing enemy territory,"
+        + f"\nagainst the enemy forces. You're convoy are {L_SHIP} class spaceships."
+        + "\nMost likely youre enemy uses the same"
+        + "\nThere will be also no intel on their orientation!"
+        + "\nBe aware, the amount of SpaceShips rises with the size of the battlefield."
+        + "\nPer round you'll have three attemps to disable enemy spaceships by"
+        + "\nfiring missiles on the enemy battlefield, hit them before they do!"
+        + "\n\nGOOD LUCK Captain!"
+        + Style.RESET_ALL
+        + "\n\n"
+    )
+
+
 def main():
     """
     The main function that initiates the game. It displays the game title, welcomes the player,
@@ -441,12 +468,12 @@ def main():
     determining the size of the battlefield, and initializing the game with these parameters.
     """
     title = pyfiglet.figlet_format("SpaceShips", font="computer")
-    print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
-    print("\n\nWelcome to Spaceships, a variant of the classic BattleShip game")
+    print(MAGENTA_CYAN_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
 
     play_again = True
     while play_again:
-        username = get_valid_username()
+        username = get_valid_username(MAGENTA_WHITE_STYLE)
+        display_rules(MAGENTA_WHITE_STYLE, username)
         size, number_of_ships = get_valid_game_size()
         game = SpaceShipsGame(size, number_of_ships, username)
         game.play_game()
