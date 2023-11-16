@@ -20,6 +20,8 @@ USERNAME_LENGTH_CEIL = 8
 
 
 class SpaceShipsGame:
+    """_summary_
+    """
     def __init__(self, size, number_of_ships, username):
         self.size = size
         self.number_of_ships = number_of_ships
@@ -32,9 +34,7 @@ class SpaceShipsGame:
             "previous_attempts": set(),
             "number_of_turns": 0,
         }
-        self.computer_turn_data = {
-            "total_hits": 0,
-            "previous_attempts": set()}
+        self.computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
 
         for _ in range(number_of_ships):
             self.place_spaceship(self.user_battlefield, GREEN_WHITE_STYLE)
@@ -114,14 +114,14 @@ class SpaceShipsGame:
             else:
                 continue
             # Check if spaceship_cords can be placed on battlefield
-            if all(
+            if spaceship_coords and all(
                 battlefield[row][column] == "| - " for row, column in spaceship_coords
             ):
                 for row, column in spaceship_coords:
                     battlefield[row][column] = "|" + str(
                         style + " o " + Style.RESET_ALL
                     )
-                    break
+                break
 
     def fire_missile(self, battlefield, target, style):
         """
@@ -157,8 +157,7 @@ class SpaceShipsGame:
         Returns:
             tuple: Validated target coordinates (row, col).
         """
-        row, col = None, None
-        while row is None or col is None:
+        while True:
             target_input = input("Enter target coordinates (e.g., A1): ").upper()
             if (
                 len(target_input) < 2
@@ -166,7 +165,6 @@ class SpaceShipsGame:
                 or not target_input[1:].isdigit()
             ):
                 print("Invalid format. Please enter coordinates like 'A1'.")
-                row, col = None, None
                 continue
 
             row = int(target_input[1:]) - 1
@@ -181,12 +179,10 @@ class SpaceShipsGame:
                 print(
                     "Target out of range. Please choose a target within the battlefield."
                 )
-                row, col = None, None
                 continue
 
             if (row, col) in turn_data["previous_attempts"]:
                 print("Field already targeted. Choose another target.")
-                row, col = None, None
                 continue
 
             turn_data["previous_attempts"].add((row, col))
@@ -216,7 +212,9 @@ class SpaceShipsGame:
                 continue
 
             self.computer_turn_data["previous_attempts"].add((row, col))
-            result = self.fire_missile(self.user_battlefield, (row, col), RED_WHITE_STYLE)
+            result = self.fire_missile(
+                self.user_battlefield, (row, col), RED_WHITE_STYLE
+            )
             missiles_fired += 1
             if result == "hit":
                 self.computer_turn_data["total_hits"] += 1
@@ -247,8 +245,12 @@ class SpaceShipsGame:
             missiles_fired < NUMBER_OF_MISSILES
             and self.user_turn_data["total_hits"] < self.number_of_ship_segments
         ):
-            row, col = self.turn_validated_input(self.computer_battlefield, self.user_turn_data)
-            result = self.fire_missile(self.computer_battlefield, (row, col), GREEN_WHITE_STYLE)
+            row, col = self.turn_validated_input(
+                self.computer_battlefield, self.user_turn_data
+            )
+            result = self.fire_missile(
+                self.computer_battlefield, (row, col), GREEN_WHITE_STYLE
+            )
             missiles_fired += 1
             if result == "hit":
                 self.user_turn_data["total_hits"] += 1
@@ -290,6 +292,42 @@ class SpaceShipsGame:
                 else:
                     print(cell, end="")
             print("||")
+
+    def play_round(self):
+        """_summary_"""
+        print("test1")
+        self.print_battlefield(
+            self.user_battlefield, BLUE_WHITE_STYLE, False, self.username
+        )
+        self.print_battlefield(
+            self.computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
+        )
+        print("\nUser's turn to fire!")
+        self.user_turn()
+
+        print("\nComputer's turn to fire!")
+        self.computer_turn()
+
+    def check_winner(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
+        if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
+            print(
+                f"\n\nCongratulations {self.username.upper()}! All enemy spacecraft destroyed. You win!"
+            )
+            return True
+        elif self.computer_turn_data["total_hits"] == self.number_of_ship_segments:
+            print("All your spacecraft destroyed. Computer wins!")
+            return True
+        return False
+
+    def play_game(self):
+        """_summary_"""
+        while not self.check_winner():
+            self.play_round()
 
 
 def get_valid_username():
@@ -343,64 +381,22 @@ def get_valid_game_size():
                 number_of_ships = size - (
                     BATTLEFIELD_MIN_SIZE - NUMBER_OF_DEFAULT_SHIPS
                 )
-                number_of_ship_segments = (
-                    NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
-                )
-                return size, number_of_ships, number_of_ship_segments
+
+                return size, number_of_ships
         except ValueError:
             print("Invalid input. Please enter a valid integer size.")
 
 
 def main():
-    """
-    Main function to run the SpaceShips game. It sets up the game, creates the battlefields,
-    and manages the game flow.
-    """
+    """_summary_"""
     title = pyfiglet.figlet_format("SpaceShips", font="computer")
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
-    print(
-        "\n" + "\n" + "Welcome to Spaceships, a variant of the classic BattleShip game"
-    )
+    print("\n\nWelcome to Spaceships, a variant of the classic BattleShip game")
+
     username = get_valid_username()
-    size, number_of_ships, number_of_ship_segments = get_valid_game_size()
-
-    user_battlefield, computer_battlefield = setup_battlefields(size, number_of_ships)
-    print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, username)
-
-    print_battlefield(
-        computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
-    )
-
-    user_turn_data = {"total_hits": 0, "previous_attempts": set(), "number_of_turns": 0}
-    computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
-
-    while (
-        user_turn_data["total_hits"] < number_of_ship_segments
-        and computer_turn_data["total_hits"] < number_of_ship_segments
-    ):
-        print("\nUser's turn to fire!")
-        user_turn(computer_battlefield, user_turn_data, number_of_ship_segments)
-
-        print("\nComputer's turn to fire!")
-        computer_turn(user_battlefield, computer_turn_data, number_of_ship_segments)
-
-        print_battlefield(user_battlefield, BLUE_WHITE_STYLE, False, "User")
-        print_battlefield(
-            computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
-        )
-
-        if user_turn_data["total_hits"] == number_of_ship_segments:
-            print(
-                "\n"
-                + "\n"
-                + f"Congratulations {username.upper()}"
-                + "\n"
-                + "All enemy spacecraft destroyed. You win!"
-            )
-            break
-        elif computer_turn_data["total_hits"] == number_of_ship_segments:
-            print("All your spacecraft destroyed. Computer wins!")
-            break
+    size, number_of_ships = get_valid_game_size()
+    game = SpaceShipsGame(size, number_of_ships, username)
+    game.play_game()
 
 
 main()
