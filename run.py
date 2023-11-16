@@ -397,7 +397,7 @@ def get_valid_username(style):
             style
             + "\n\nWhat your name captain?, enter a username with a length between"
             + f" {USERNAME_LENGTH_FLOOR} "
-            + f"and {USERNAME_LENGTH_CEIL} chars:"
+            + f"and {USERNAME_LENGTH_CEIL} chars:  "
             + Style.RESET_ALL
         )
         if (
