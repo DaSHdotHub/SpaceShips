@@ -295,7 +295,6 @@ class SpaceShipsGame:
 
     def play_round(self):
         """_summary_"""
-        print("test1")
         self.print_battlefield(
             self.user_battlefield, BLUE_WHITE_STYLE, False, self.username
         )
@@ -305,8 +304,11 @@ class SpaceShipsGame:
         print("\nUser's turn to fire!")
         self.user_turn()
 
-        print("\nComputer's turn to fire!")
-        self.computer_turn()
+        if self.user_turn_data["total_hits"] != self.number_of_ship_segments:
+            print("\nComputer's turn to fire!")
+            self.computer_turn()
+        else:
+            return
 
     def check_winner(self):
         """_summary_
