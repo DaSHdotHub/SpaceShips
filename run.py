@@ -411,10 +411,20 @@ def main():
     print(BLUE_WHITE_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
     print("\n\nWelcome to Spaceships, a variant of the classic BattleShip game")
 
-    username = get_valid_username()
-    size, number_of_ships = get_valid_game_size()
-    game = SpaceShipsGame(size, number_of_ships, username)
-    game.play_game()
+    play_again = True
+    while play_again:
+        username = get_valid_username()
+        size, number_of_ships = get_valid_game_size()
+        game = SpaceShipsGame(size, number_of_ships, username)
+        game.play_game()
+
+        response = input("\nWould you like to play another round? (yes/no): ").lower()
+        play_again = response == "yes"
+
+        if play_again:
+            print("\nStarting a new game...\n")
+        else:
+            print("\nThank you for playing! See you next time.\n")
 
 
 main()
