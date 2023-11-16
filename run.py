@@ -397,7 +397,7 @@ def get_valid_username(style):
             style
             + "\n\nWhat your name captain?, enter a username with a length between"
             + f" {USERNAME_LENGTH_FLOOR} "
-            + f"and {USERNAME_LENGTH_CEIL} characters: "
+            + f"and {USERNAME_LENGTH_CEIL} chars:"
             + Style.RESET_ALL
         )
         if (
@@ -457,8 +457,9 @@ def display_rules(style, username):
         "\n\n"
         + style
         + "Welcome to SpaceShips, a variant of the classic BattleShip game."
-        + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips crossing enemy territory,"
-        + f"\nagainst the enemy forces. You're convoy are {L_SHIP} class spaceships."
+        + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips crossing"
+        ,"
+        + f"\nenemy territory against the enemy forces. You're convoy are '{L_SHIP}'-class spaceships."
         + "\nMost likely youre enemy uses the same"
         + "\nThere will be also no intel on their orientation!"
         + "\nBe aware, the amount of SpaceShips rises with the size of the battlefield."
