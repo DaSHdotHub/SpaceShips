@@ -148,6 +148,73 @@ class SpaceShipsGame:
             battlefield[row][col] = "| * "
             return "miss"
 
+    def parse_target_input(self, target_input):
+        """
+        Parses the user input and converts it into row and column indices.
+
+        Args:
+            target_input (str): The input string provided by the user,
+                representing target coordinates.
+
+        Returns:
+            tuple: A tuple (row, col) representing the parsed row and column
+                indices. Returns (None, None) if parsing fails.
+        """
+        try:
+            row = int(target_input[1:]) - 1
+            col = string.ascii_uppercase.index(target_input[0])
+            return row, col
+        except (ValueError, IndexError):
+            return None, None
+
+    def is_valid_format(self, target_input):
+        """
+        Validates the format of the target input.
+
+        Args:
+            target_input (str): The input string provided by the user.
+
+        Returns:
+            bool: True if the input is in the correct format, False otherwise.
+        """
+        return (
+            len(target_input) >= 2
+            and target_input[0].isalpha()
+            and target_input[1:].isdigit()
+        )
+
+    def is_within_range(self, row, col, battlefield):
+        """
+        Checks if the given row and column indices are within the range of
+        the battlefield.
+
+        Args:
+            row (int): Row index of the target.
+            col (int): Column index of the target.
+            battlefield (list of list): 2D list representing the battlefield.
+
+        Returns:
+            bool: True if the target is within the range of the battlefield,
+                False otherwise.
+        """
+        return 0 <= row < len(battlefield) and 0 <= col < len(battlefield[0])
+
+    def is_unique_target(self, row, col, turn_data):
+        """
+        Checks if the target coordinates have not been previously attempted.
+
+        Args:
+            row (int): Row index of the target.
+            col (int): Column index of the target.
+            turn_data (dict): Dictionary containing data about the current
+                turn, including previously attempted targets.
+
+        Returns:
+            bool: True if the target has not been previously attempted,
+                False otherwise.
+        """
+        return (row, col) not in turn_data["previous_attempts"]
+
     def turn_validated_input(self, battlefield, turn_data):
         """
         Continuously prompts the user for target coordinates until valid and
@@ -166,30 +233,20 @@ class SpaceShipsGame:
             target_input = input(
                 "Enter target coordinates (e.g., A1): "
             ).upper()
-            if (
-                len(target_input) < 2
-                or not target_input[0].isalpha()
-                or not target_input[1:].isdigit()
-            ):
+
+            if not self.is_valid_format(target_input):
                 print("Invalid format. Please enter coordinates like 'A1'.")
                 continue
 
-            row = int(target_input[1:]) - 1
-            col = string.ascii_uppercase.index(target_input[0])
-
-            if (
-                row < 0
-                or row >= len(battlefield)
-                or col < 0
-                or col >= len(battlefield[0])
-            ):
+            row, col = self.parse_target_input(target_input)
+            if row is None or not self.is_within_range(row, col, battlefield):
                 print(
-                    "Target out of range. Please choose a target within the"
-                    + "battlefield."
+                    "Target out of range. Please choose a target within"
+                    + " the battlefield."
                 )
                 continue
 
-            if (row, col) in turn_data["previous_attempts"]:
+            if not self.is_unique_target(row, col, turn_data):
                 print("Field already targeted. Choose another target.")
                 continue
 
