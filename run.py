@@ -320,6 +320,56 @@ class SpaceShipsGame:
                 print("All enemy ships have been hit!")
                 break
 
+    def print_battlefield_header(self, name, style, battlefield_length):
+        """
+        Prints the header for the battlefield.
+
+        Args:
+            name (str): The name to display above the battlefield.
+            style (str): Style string for coloring the output.
+            battlefield_length (int): Length of the battlefield to calculate
+                border length.
+        """
+        header_length = max(len(name) + 12, battlefield_length * 2 + 8)
+        header_border = "#" * header_length
+        print(
+            f"\n{header_border}\n{style}{name.upper()}"
+            + f" BATTLEFIELD{Style.RESET_ALL}\n{header_border}"
+        )
+
+    def print_battlefield_indices(self, battlefield, style):
+        """
+        Prints the column indices for the battlefield.
+
+        Args:
+            battlefield (list of list): 2D list representing the battlefield.
+            style (str): Style string for coloring the output.
+        """
+        top_indices = (
+            "   || "
+            + " | ".join(string.ascii_uppercase[: len(battlefield)])
+            + " ||"
+        )
+        print(style + top_indices + Style.RESET_ALL)
+
+    def print_battlefield_row(self, row, index, style, hide_ships):
+        """
+        Prints a single row of the battlefield.
+
+        Args:
+            row (list): The row of the battlefield to print.
+            index (int): The row number to display.
+            style (str): Style string for coloring the output.
+            hide_ships (bool): Whether to hide the ships on the battlefield.
+        """
+        print(style + f"{index + 1:2d}", end=" " + Style.RESET_ALL + "|")
+        for cell in row:
+            if hide_ships and "o" in cell:
+                print("| - ", end="")
+            else:
+                print(cell, end="")
+        print("||")
+
     def print_battlefield(self, battlefield, style, hide_ships, name):
         """
         Prints the current state of the battlefield, displayed with
@@ -331,43 +381,11 @@ class SpaceShipsGame:
             hide_ships (boolean): Bool to hide ships
             name (str): Display name above battlefield grid
         """
-        bname = style + f"{name.upper()} BATTLEFIELD" + Style.RESET_ALL
-        b_topdown = (
-            "##" * (len(battlefield) - BATTLEFIELD_MIN_SIZE) * 2
-            + "######################"
-        )
-        b_left = "#" * math.ceil(
-            (len(b_topdown) - len(name + " battlefield")) / 2
-        )
-        b_right = "#" * math.floor(
-            (len(b_topdown) - len(name + " battlefield")) / 2
-        )
-
-        print(
-            "\n"
-            + b_topdown
-            + "\n"
-            + b_left
-            + bname
-            + b_right
-            + "\n"
-            + b_topdown
-        )
-        top_indices = (
-            "   || "
-            + " | ".join(string.ascii_uppercase[: len(battlefield)])
-            + " ||"
-        )
-        print(style + top_indices + Style.RESET_ALL)
+        self.print_battlefield_header(name, style, len(battlefield))
+        self.print_battlefield_indices(battlefield, style)
 
         for i, row in enumerate(battlefield):
-            print(style + f"{i + 1:2d}", end=" " + Style.RESET_ALL + "|")
-            for cell in row:
-                if hide_ships and "o" in cell:
-                    print("| - ", end="")
-                else:
-                    print(cell, end="")
-            print("||")
+            self.print_battlefield_row(row, i, style, hide_ships)
 
     def generate_turn_summary(self):
         """
