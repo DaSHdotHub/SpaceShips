@@ -355,13 +355,17 @@ class SpaceShipsGame:
         return False
 
     def play_game(self):
-        """_summary_"""
+        """
+        Starts and manages the gameplay loop. The game continues in rounds until a winner is determined.
+        Each round consists of both the user's and computer's turns, with the game checking for a winner
+        after each round.
+        """
         while not self.check_winner():
             self.play_round()
 
 
 def get_valid_username(style):
-    """
+    """‚
     Prompts the user to enter a username that meets the length criteria
 
     The function continuously requests input until the user provides a username that meets
