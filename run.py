@@ -23,7 +23,8 @@ USERNAME_LENGTH_CEIL = 8
 
 class SpaceShipsGame:
     """
-    Initializes the SpaceShips game with specified battlefield size, number of ships, and username.
+    Initializes the SpaceShips game with specified battlefield size, number of
+    ships, and username.
 
     Args:
         size (int): Size of the square battlefield (number of rows and columns).
@@ -33,18 +34,22 @@ class SpaceShipsGame:
     Attributes:
         size (int): Size of the battlefield (both width and height).
         number_of_ships (int): Number of ships each player has.
-        number_of_ship_segments (int): Total number of segments across all ships.
+        number_of_ship_segments (int): Total number of segments across all ships
         user_battlefield (list of list): The user's battlefield grid.
         computer_battlefield (list of list): The computer's battlefield grid.
         username (str): The username of the player.
-        user_turn_data (dict): Data about the user's current turn, including hits and attempts.
-        computer_turn_data (dict): Data about the computer's current turn, including hits and attempts.
+        user_turn_data (dict): Data about the user's current turn, including
+            hits and attempts.
+        computer_turn_data (dict): Data about the computer's current turn,
+            including hits and attempts.
     """
 
     def __init__(self, size, number_of_ships, username):
         self.size = size
         self.number_of_ships = number_of_ships
-        self.number_of_ship_segments = NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+        self.number_of_ship_segments = (
+            NUMBER_OF_DEFAULT_SHIP_SEGMENTS * number_of_ships
+        )
         self.user_battlefield = self.create_battlefield()
         self.computer_battlefield = self.create_battlefield()
         self.username = username
@@ -71,12 +76,12 @@ class SpaceShipsGame:
 
     def get_spaceship_coordinates(self, row, col, orientation):
         """
-        Helper function of place_spaceship(), handles generation of coordinates for
-        a correct placed spaceship.
+        Helper function of place_spaceship(), handles generation of coordinates
+        for a correct placed spaceship.
 
         Args:
-            row (int): The row coordinate where the spaceship should be placed
-            col (int): The column coordinate where the spaceship should be placed
+            row (int): The row coord. where the spaceship should be placed
+            col (int): The column coord. where the spaceship should be placed
             orientation (int): Given orientation how the spaceship should placed
 
         Returns:
@@ -94,10 +99,10 @@ class SpaceShipsGame:
 
     def place_spaceship(self, battlefield, style):
         """
-        Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies
-        3 fields, with one central and side fields forming the 'L' shape. Function
-        ensures that the spaceship does not overlap with existing ships and fits
-        within the battlefield
+        Places an 'L' shaped spaceship on the battlefield. Each spaceship
+        occupies 3 fields, with one central and side fields forming the
+        'L' shape. Function ensures that the spaceship does not overlap with
+        existing ships and fits within the battlefield.
 
         Args:
             battlefield (list of list): 2D list representing the battlefield
@@ -109,13 +114,17 @@ class SpaceShipsGame:
                 random.randint(0, self.size - 1),
             )
             orientation = random.randint(1, 4)
-            spaceship_coords = self.get_spaceship_coordinates(row, col, orientation)
+            spaceship_coords = self.get_spaceship_coordinates(
+                row, col, orientation
+            )
 
             if spaceship_coords and all(
                 battlefield[r][c] == "| - " for r, c in spaceship_coords
             ):
                 for r, c in spaceship_coords:
-                    battlefield[r][c] = "|" + str(style + " o " + Style.RESET_ALL)
+                    battlefield[r][c] = "|" + str(
+                        style + " o " + Style.RESET_ALL
+                    )
                 break
 
     def fire_missile(self, battlefield, target, style):
@@ -141,8 +150,9 @@ class SpaceShipsGame:
 
     def turn_validated_input(self, battlefield, turn_data):
         """
-        Continuously prompts the user for target coordinates until valid and untargeted
-        coordinates are given. Also updates the turn data with the new attempt.
+        Continuously prompts the user for target coordinates until valid and
+        untargeted coordinates are given. Also updates the turn data with
+        the new attempt.
 
         Args:
             battlefield (list of list): 2D list representing the battlefield.
@@ -153,7 +163,9 @@ class SpaceShipsGame:
             tuple: Validated target coordinates (row, col).
         """
         while True:
-            target_input = input("Enter target coordinates (e.g., A1): ").upper()
+            target_input = input(
+                "Enter target coordinates (e.g., A1): "
+            ).upper()
             if (
                 len(target_input) < 2
                 or not target_input[0].isalpha()
@@ -172,7 +184,8 @@ class SpaceShipsGame:
                 or col >= len(battlefield[0])
             ):
                 print(
-                    "Target out of range. Please choose a target within the battlefield."
+                    "Target out of range. Please choose a target within the"
+                    + "battlefield."
                 )
                 continue
 
@@ -185,17 +198,19 @@ class SpaceShipsGame:
 
     def computer_turn(self):
         """
-        Manages the computer's turn in the game, randomly firing missiles at the user's battlefield.
+        Manages the computer's turn in the game, randomly firing missiles at the
+        user's battlefield.
 
         Returns:
-            None: This function does not return a value but updates the battlefield
-                and turn_data in-place.
+            None: This function does not return a value but updates the
+                battlefield and turn_data in-place.
         """
         missiles_fired = 0
         size = len(self.user_battlefield)
         while (
             missiles_fired < NUMBER_OF_MISSILES
-            and self.computer_turn_data["total_hits"] < self.number_of_ship_segments
+            and self.computer_turn_data["total_hits"]
+            < self.number_of_ship_segments
         ):
             row, col = random.randint(0, size - 1), random.randint(0, size - 1)
             if (row, col) in self.computer_turn_data["previous_attempts"]:
@@ -217,12 +232,12 @@ class SpaceShipsGame:
 
     def user_turn(self):
         """
-        Manages the user's turn in the game, allowing them to fire missiles until‚
-        they run out of missiles or hit all spaceship segments.
+        Manages the user's turn in the game, allowing them to fire missiles
+        until‚ they run out of missiles or hit all spaceship segments.
 
         Returns:
-            None: This function does not return a value but updates the battlefield
-                and turn_data in-place.
+            None: This function does not return a value but updates
+                the battlefield and turn_data in-place.
         """
         missiles_fired = 0
         self.user_turn_data["number_of_turns"] += 1
@@ -240,7 +255,10 @@ class SpaceShipsGame:
             if result == "hit":
                 self.user_turn_data["total_hits"] += 1
 
-            if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
+            if (
+                self.user_turn_data["total_hits"]
+                == self.number_of_ship_segments
+            ):
                 print("All enemy ships have been hit!")
                 break
 
@@ -260,12 +278,27 @@ class SpaceShipsGame:
             "##" * (len(battlefield) - BATTLEFIELD_MIN_SIZE) * 2
             + "######################"
         )
-        b_left = "#" * math.ceil((len(b_topdown) - len(name + " battlefield")) / 2)
-        b_right = "#" * math.floor((len(b_topdown) - len(name + " battlefield")) / 2)
+        b_left = "#" * math.ceil(
+            (len(b_topdown) - len(name + " battlefield")) / 2
+        )
+        b_right = "#" * math.floor(
+            (len(b_topdown) - len(name + " battlefield")) / 2
+        )
 
-        print("\n" + b_topdown + "\n" + b_left + bname + b_right + "\n" + b_topdown)
+        print(
+            "\n"
+            + b_topdown
+            + "\n"
+            + b_left
+            + bname
+            + b_right
+            + "\n"
+            + b_topdown
+        )
         top_indices = (
-            "   || " + " | ".join(string.ascii_uppercase[: len(battlefield)]) + " ||"
+            "   || "
+            + " | ".join(string.ascii_uppercase[: len(battlefield)])
+            + " ||"
         )
         print(style + top_indices + Style.RESET_ALL)
 
@@ -280,15 +313,21 @@ class SpaceShipsGame:
 
     def generate_turn_summary(self):
         """
-        Generates and prints a summary of the attempts and hits for both the user and the computer.
+        Generates and prints a summary of the attempts and hits for both the
+        user and the computer.
         """
 
         def format_attempts(attempts):
             return ", ".join(
-                [string.ascii_uppercase[col] + str(row + 1) for row, col in attempts]
+                [
+                    string.ascii_uppercase[col] + str(row + 1)
+                    for row, col in attempts
+                ]
             )
 
-        user_attempts = format_attempts(self.user_turn_data["previous_attempts"])
+        user_attempts = format_attempts(
+            self.user_turn_data["previous_attempts"]
+        )
         computer_attempts = format_attempts(
             self.computer_turn_data["previous_attempts"]
         )
@@ -306,24 +345,32 @@ class SpaceShipsGame:
 
         print("\nTurn Summary:")
         print(f"User fired on fields {user_attempts}. Hits: {user_hits}.")
-        print(f"Computer fired on fields {computer_attempts}. Hits: {computer_hits}.")
+        print(
+            f"Computer fired on fields {computer_attempts}. "
+            + f"Hits: {computer_hits}."
+        )
 
     def play_round(self):
         """
-        Executes a single round of the game, which involves both the user's and computer's turns.
-        The round starts with the user's turn, followed by the computer's turn, unless the user has
-        already won the game. The battlefield status for both the user and computer is displayed.
+        Executes a single round of the game, which involves both the user's and
+        computer's turns.The round starts with the user's turn, followed by the
+        computer's turn, unless the user has already won the game. The
+        battlefield status for both the user and computer is displayed.
 
         The round progresses as follows:
         - User's turn: User attempts to hit computer's ships.
-        - Computer's turn: Computer attempts to hit user's ships (if user hasn't won yet).
+        - Computer's turn: Computer attempts to hit user's ships
+            (if user hasn't won yet).
         - Round is finished, a summary is printed.
         """
         self.print_battlefield(
             self.user_battlefield, BLUE_WHITE_STYLE, False, self.username
         )
         self.print_battlefield(
-            self.computer_battlefield, RED_WHITE_STYLE, HIDE_COMPUTER_SHIPS, "Enemy"
+            self.computer_battlefield,
+            RED_WHITE_STYLE,
+            HIDE_COMPUTER_SHIPS,
+            "Enemy",
         )
         print("\nUser's turn to fire!")
         self.user_turn()
@@ -338,27 +385,33 @@ class SpaceShipsGame:
 
     def check_winner(self):
         """
-        Checks if there is a winner in the game based on the total hits recorded for each player.
+        Checks if there is a winner in the game based on the total hits recorded
+        for each player.
 
         Returns:
-            bool: Returns True if either the user or the computer has hit all segments of the opponent's
-                  spaceships, indicating a win. Otherwise, returns False, indicating the game continues.
+            bool: Returns True if either the user or the computer has hit all
+                segments of the opponent's spaceships, indicating a win.
+                Otherwise, returns False, indicating the game continues.
         """
         if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
             print(
-                f"\n\nCongratulations {self.username.upper()}! All enemy spacecraft destroyed. You win!"
+                f"\n\nCongratulations {self.username.upper()}! All enemy "
+                + "spacecraft destroyed. You win!"
             )
             return True
-        elif self.computer_turn_data["total_hits"] == self.number_of_ship_segments:
+        elif (
+            self.computer_turn_data["total_hits"]
+            == self.number_of_ship_segments
+        ):
             print("All your spacecraft destroyed. Computer wins!")
             return True
         return False
 
     def play_game(self):
         """
-        Starts and manages the gameplay loop. The game continues in rounds until a winner is determined.
-        Each round consists of both the user's and computer's turns, with the game checking for a winner
-        after each round.
+        Starts and manages the gameplay loop. The game continues in rounds until
+        a winner is determined. Each round consists of both the user's and
+        computer's turns, with the game checking for a winner after each round.
         """
         while not self.check_winner():
             self.play_round()
@@ -368,8 +421,9 @@ def get_valid_username(style):
     """‚
     Prompts the user to enter a username that meets the length criteria
 
-    The function continuously requests input until the user provides a username that meets
-    the length requirements defined by USERNAME_LENGTH_FLOOR and USERNAME_LENGTH_CEIL.
+    The function continuously requests input until the user provides a username
+    that meets the length requirements defined by USERNAME_LENGTH_FLOOR
+    and USERNAME_LENGTH_CEIL.
 
     Args:
         style (str): Style string for coloring the output
@@ -379,8 +433,8 @@ def get_valid_username(style):
     while True:
         username = input(
             style
-            + "\n\nWhat your name captain?, enter a username with a length between"
-            + f" {USERNAME_LENGTH_FLOOR} "
+            + "\n\nWhat your name captain?, enter a username with a length "
+            + f"between {USERNAME_LENGTH_FLOOR} "
             + f"and {USERNAME_LENGTH_CEIL} chars:  "
             + Style.RESET_ALL
         )
@@ -395,8 +449,8 @@ def get_valid_username(style):
 
 def get_valid_game_size():
     """
-    Prompts user to enter a valid battlefield size, must be within a specified range
-    Continuously asks for input until a valid size is entered
+    Prompts user to enter a valid battlefield size, must be within a specified
+    range. Continuously asks for input until a valid size is entered
 
     Returns:
         int: The validated size of the battlefield entered by the user
@@ -406,8 +460,8 @@ def get_valid_game_size():
         try:
             size = int(
                 input(
-                    f"Enter the size of the battlefield, size should be between "
-                    f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
+                    f"Enter the size of the battlefield, size should be between"
+                    f" {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
                 )
             )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
@@ -441,11 +495,13 @@ def display_rules(style, username):
         "\n\n"
         + style
         + "Welcome to SpaceShips, a variant of the classic BattleShip game."
-        + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips crossing"
-        + f"\nenemy territory against the enemy forces. You're convoy are {L_SHIP}-class spaceships."
+        + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips"
+        + "crossing \nenemy territory against the enemy forces. "
+        + f"You're convoy are {L_SHIP}-class spaceships."
         + "\nMost likely youre enemy uses the same"
         + "\nThere will be also no intel on their orientation!"
-        + "\nBe aware, the amount of SpaceShips rises with the size of the battlefield."
+        + "\nBe aware, the amount of SpaceShips rises with the "
+        + "size of the battlefield."
         + "\nPer round you'll have three attemps to disable enemy spaceships by"
         + "\nfiring missiles on the enemy battlefield, hit them before they do!"
         + "\n\nGOOD LUCK Captain!"
@@ -456,9 +512,10 @@ def display_rules(style, username):
 
 def main():
     """
-    The main function that initiates the game. It displays the game title, welcomes the player,
-    and guides them through the process of setting up the game. This includes getting a valid username,
-    determining the size of the battlefield, and initializing the game with these parameters.
+    The main function that initiates the game. It displays the game title,
+    welcomes the player, and guides them through the process of setting up the
+    game. This includes getting a valid username, determining the size of the
+    battlefield, and initializing the game with these parameters.
     """
     title = pyfiglet.figlet_format("SpaceShips", font="computer")
     print(MAGENTA_CYAN_STYLE + "\n" + "\n" + "\n" + title + Style.RESET_ALL)
@@ -471,7 +528,9 @@ def main():
         game = SpaceShipsGame(size, number_of_ships, username)
         game.play_game()
 
-        response = input("\nWould you like to play another round? (yes/no): ").lower()
+        response = input(
+            "\nWould you like to play another round? (yes/no): "
+        ).lower()
         play_again = response == "yes"
 
         if play_again:
