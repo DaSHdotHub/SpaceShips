@@ -1,7 +1,6 @@
 # Imports
 import random
 import string
-import math
 import pyfiglet
 from colorama import Back, Fore, Style
 
@@ -19,6 +18,7 @@ BATTLEFIELD_MAX_SIZE = 10
 HIDE_COMPUTER_SHIPS = True
 USERNAME_LENGTH_FLOOR = 3
 USERNAME_LENGTH_CEIL = 8
+L_SHIP = "\u255a"
 
 
 class SpaceShipsGame:
@@ -290,7 +290,7 @@ class SpaceShipsGame:
     def user_turn(self):
         """
         Manages the user's turn in the game, allowing them to fire missiles
-        until‚ they run out of missiles or hit all spaceship segments.
+        until, they run out of missiles or hit all spaceship segments.
 
         Returns:
             None: This function does not return a value but updates
@@ -495,7 +495,7 @@ class SpaceShipsGame:
 
 
 def get_valid_username(style):
-    """‚
+    """
     Prompts the user to enter a username that meets the length criteria
 
     The function continuously requests input until the user provides a username
@@ -567,7 +567,6 @@ def display_rules(style, username):
     Return:
         No return, outputs game information on the console.
     """
-    L_SHIP = "\u255a"
     print(
         "\n\n"
         + style
@@ -575,11 +574,11 @@ def display_rules(style, username):
         + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips"
         + "crossing \nenemy territory against the enemy forces. "
         + f"You're convoy are {L_SHIP}-class spaceships."
-        + "\nMost likely youre enemy uses the same"
-        + "\nThere will be also no intel on their orientation!"
-        + "\nBe aware, the amount of SpaceShips rises with the "
+        + "\nMost likely, your enemy uses the same"
+        + "\nThere will also be no intel on their orientation!"
+        + "\nBe aware, the number of SpaceShips increases with the "
         + "size of the battlefield."
-        + "\nPer round you'll have three attempts to disable enemy spaceships "
+        + "\nPer round, you'll have three attempts to disable enemy spaceships"
         + "\nby firing missiles on the enemy battlefield, hit them before they"
         + " do!"
         + "\n\nGOOD LUCK Captain!"
