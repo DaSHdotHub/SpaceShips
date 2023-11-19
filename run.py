@@ -69,6 +69,29 @@ class SpaceShipsGame:
         """
         return [["| - " for _ in range(self.size)] for _ in range(self.size)]
 
+    def get_spaceship_coordinates(self, row, col, orientation):
+        """
+        Helper function of place_spaceship(), handles generation of coordinates for
+        a correct placed spaceship.
+
+        Args:
+            row (int): The row coordinate where the spaceship should be placed
+            col (int): The column coordinate where the spaceship should be placed
+            orientation (int): Given orientation how the spaceship should placed
+
+        Returns:
+            list of tuples: Returns all segment coordinates of one spaceship
+        """
+        if orientation == 1 and row < self.size - 1 and col < self.size - 1:
+            return [(row, col), (row + 1, col), (row, col + 1)]
+        elif orientation == 2 and row < self.size - 1 and col > 0:
+            return [(row, col), (row + 1, col), (row, col - 1)]
+        elif orientation == 3 and row > 0 and col > 0:
+            return [(row, col), (row - 1, col), (row, col - 1)]
+        elif orientation == 4 and row > 0 and col < self.size - 1:
+            return [(row, col), (row - 1, col), (row, col + 1)]
+        return None
+
     def place_spaceship(self, battlefield, style):
         """
         Places an 'L' shaped spaceship on the battlefield. Each spaceship occupies
@@ -81,61 +104,18 @@ class SpaceShipsGame:
             style (str): Style string for coloring the spaceship
         """
         while True:
-            # Create random coordinate for center of spaceship
-            spaceship_center_row = random.randint(0, self.size - 1)
-            spaceship_center_col = random.randint(0, self.size - 1)
-            # Assign random orientation of spaceship, 4 orientations possible
+            row, col = (
+                random.randint(0, self.size - 1),
+                random.randint(0, self.size - 1),
+            )
             orientation = random.randint(1, 4)
-            if (
-                orientation == 1
-                and spaceship_center_row < self.size - 1
-                and spaceship_center_col < self.size - 1
-            ):
-                spaceship_coords = [
-                    (spaceship_center_row, spaceship_center_col),
-                    (spaceship_center_row + 1, spaceship_center_col),
-                    (spaceship_center_row, spaceship_center_col + 1),
-                ]
-            elif (
-                orientation == 2
-                and spaceship_center_row < self.size - 1
-                and spaceship_center_col > 0
-            ):
-                spaceship_coords = [
-                    (spaceship_center_row, spaceship_center_col),
-                    (spaceship_center_row + 1, spaceship_center_col),
-                    (spaceship_center_row, spaceship_center_col - 1),
-                ]
-            elif (
-                orientation == 3
-                and spaceship_center_row > 0
-                and spaceship_center_col > 0
-            ):
-                spaceship_coords = [
-                    (spaceship_center_row, spaceship_center_col),
-                    (spaceship_center_row - 1, spaceship_center_col),
-                    (spaceship_center_row, spaceship_center_col - 1),
-                ]
-            elif (
-                orientation == 4
-                and spaceship_center_row > 0
-                and spaceship_center_col < self.size - 1
-            ):
-                spaceship_coords = [
-                    (spaceship_center_row, spaceship_center_col),
-                    (spaceship_center_row - 1, spaceship_center_col),
-                    (spaceship_center_row, spaceship_center_col + 1),
-                ]
-            else:
-                continue
-            # Check if spaceship_cords can be placed on battlefield
+            spaceship_coords = self.get_spaceship_coordinates(row, col, orientation)
+
             if spaceship_coords and all(
-                battlefield[row][column] == "| - " for row, column in spaceship_coords
+                battlefield[r][c] == "| - " for r, c in spaceship_coords
             ):
-                for row, column in spaceship_coords:
-                    battlefield[row][column] = "|" + str(
-                        style + " o " + Style.RESET_ALL
-                    )
+                for r, c in spaceship_coords:
+                    battlefield[r][c] = "|" + str(style + " o " + Style.RESET_ALL)
                 break
 
     def fire_missile(self, battlefield, target, style):
