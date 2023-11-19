@@ -27,14 +27,14 @@ class SpaceShipsGame:
     ships, and username.
 
     Args:
-        size (int): Size of the square battlefield (number of rows and columns).
+        size (int): Size of the square battlefield (number of rows and columns)
         number_of_ships (int): Number of ships to be placed on the battlefield.
         username (str): Username of the player.
 
     Attributes:
         size (int): Size of the battlefield (both width and height).
         number_of_ships (int): Number of ships each player has.
-        number_of_ship_segments (int): Total number of segments across all ships
+        number_of_ship_segments (int): Total num. of segments across all ships
         user_battlefield (list of list): The user's battlefield grid.
         computer_battlefield (list of list): The computer's battlefield grid.
         username (str): The username of the player.
@@ -82,7 +82,7 @@ class SpaceShipsGame:
         Args:
             row (int): The row coord. where the spaceship should be placed
             col (int): The column coord. where the spaceship should be placed
-            orientation (int): Given orientation how the spaceship should placed
+            orientation (int): Given orient. how the spaceship should placed
 
         Returns:
             list of tuples: Returns all segment coordinates of one spaceship
@@ -129,11 +129,11 @@ class SpaceShipsGame:
 
     def fire_missile(self, battlefield, target, style):
         """
-        Marks a field on the battlefield as hit or miss when a missile is fired.
+        Marks a field on the battlefield as hit or miss when a missile is fired
 
         Args:
             battlefield (list of list): 2D list representing the battlefield.
-            target (tuple of int): Coordinates (row, col) of the missile impact.
+            target (tuple of int): Coordinates (row, col) of the missile impact
             style (str): Style string for coloring the hit marker.
 
         Returns:
@@ -156,8 +156,8 @@ class SpaceShipsGame:
 
         Args:
             battlefield (list of list): 2D list representing the battlefield.
-            turn_data (dict): Dictionary containing data about the current turn,
-                        including previously attempted targets.
+            turn_data (dict): Dictionary containing data about the current turn
+                        , including previously attempted targets.
 
         Returns:
             tuple: Validated target coordinates (row, col).
@@ -198,8 +198,8 @@ class SpaceShipsGame:
 
     def computer_turn(self):
         """
-        Manages the computer's turn in the game, randomly firing missiles at the
-        user's battlefield.
+        Manages the computer's turn in the game, randomly firing missiles at
+        the user's battlefield.
 
         Returns:
             None: This function does not return a value but updates the
@@ -243,7 +243,8 @@ class SpaceShipsGame:
         self.user_turn_data["number_of_turns"] += 1
         while (
             missiles_fired < NUMBER_OF_MISSILES
-            and self.user_turn_data["total_hits"] < self.number_of_ship_segments
+            and self.user_turn_data["total_hits"]
+            < self.number_of_ship_segments
         ):
             row, col = self.turn_validated_input(
                 self.computer_battlefield, self.user_turn_data
@@ -385,8 +386,8 @@ class SpaceShipsGame:
 
     def check_winner(self):
         """
-        Checks if there is a winner in the game based on the total hits recorded
-        for each player.
+        Checks if there is a winner in the game based on the total hits
+        recorded for each player.
 
         Returns:
             bool: Returns True if either the user or the computer has hit all
@@ -409,9 +410,10 @@ class SpaceShipsGame:
 
     def play_game(self):
         """
-        Starts and manages the gameplay loop. The game continues in rounds until
-        a winner is determined. Each round consists of both the user's and
-        computer's turns, with the game checking for a winner after each round.
+        Starts and manages the gameplay loop. The game continues in rounds
+        until a winner is determined. Each round consists of both the user's
+        and computer's turns, with the game checking for a winner after each
+        round.
         """
         while not self.check_winner():
             self.play_round()
@@ -460,8 +462,8 @@ def get_valid_game_size():
         try:
             size = int(
                 input(
-                    f"Enter the size of the battlefield, size should be between"
-                    f" {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
+                    "Enter the size of the battlefield, size should be between"
+                    + f" {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}: "
                 )
             )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
@@ -502,8 +504,9 @@ def display_rules(style, username):
         + "\nThere will be also no intel on their orientation!"
         + "\nBe aware, the amount of SpaceShips rises with the "
         + "size of the battlefield."
-        + "\nPer round you'll have three attemps to disable enemy spaceships by"
-        + "\nfiring missiles on the enemy battlefield, hit them before they do!"
+        + "\nPer round you'll have three attempts to disable enemy spaceships "
+        + "\nby firing missiles on the enemy battlefield, hit them before they"
+        + " do!"
         + "\n\nGOOD LUCK Captain!"
         + Style.RESET_ALL
         + "\n\n"
