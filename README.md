@@ -20,6 +20,9 @@ As the task was to create an application that is purely run from the console and
 - [Project Structure](#project-structure)
 - [Unique Aspects to Highlight](#unique-aspects-to-highlight)
   -[Intuitive Coloring](#intuitive-coloring)
+- [GameFlow](#gameflow)
+  -[High Level Structure](#high-level-structure)
+  -[Flowchart](#flowchart)
 - [Testing & Validations](#testing--validations)
   - [Semiautomatic Testing](#validations)
   - [Manual Testing Validations](#manual-testing)
@@ -86,7 +89,48 @@ After each turn a summary is displayed, just above the updated battlefields, for
 <img src="assets/media/turn_summary.webp" alt="Turn summary of user and enemy">
 </div>
 
+## Gameflow
 
+### High-Level Structure
+* Start
+  * Begin the game. 
+* Display Game Title and Welcome Message
+  * Using pyfiglet for ASCII art.
+* Get Valid Username
+  * Validate username length.
+  * Loop until a valid username is provided.
+* Display Game Rules and Introduction
+* Get Valid Game Size
+  * Prompt for battlefield size.
+  * Validate if the size is within the allowed range.
+  * Calculate the number of ships based on size.
+  * Loop until a valid size is entered.
+* Initialize Game
+  * Create instances of SpaceShipsGame class.
+  * Initialize battlefields and place ships.
+* Game Loop
+  * Repeat until a winner is determined:
+    * User Turn:
+        * Print user battlefield.
+        * Get and validate user missile target.
+        * Update battlefield based on missile hit or miss.
+        * Check if all enemy ships are destroyed.
+* Computer Turn (if the game continues):
+  * Computer randomly selects target.
+  * Update battlefield based on missile hit or miss.
+  * Check if all user ships are destroyed.
+* Print Turn Summary
+* Check for Winner
+  * Determine if the user or computer has won.
+  * Display winning message.
+* Play Again Prompt
+  * Ask if the user wants to play again.
+  * Restart the game or end based on the user's choice.
+* End
+
+End the game session.
+### Flowchart
+![flowchart](assets/media/flowchart.webp)
 ## Testing & Validations
 ### Validations
 1. [CI Python Linter](https://pep8ci.herokuapp.com)
