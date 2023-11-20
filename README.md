@@ -3,7 +3,7 @@
 ## Introduction
 SpaceShips is a variant of the classic "Battleship" game where players aim to destroy enemy ships by guessing their locations. The objective is to defend spaceships while attempting to disable enemy ships by firing missiles.
 <br>
-While in the *classic* variant it would be a tedious singlehit vs singlehit battle, this time you have up to three shots per turn. This brings much more pace to the game, so make every hit count!
+While in the *classic* variant it would be a tedious singlehit vs singlehit battle, this game offers three shots per turn. This brings much more pace to the game, so make every hit count!
 <br>
 As the task was to create an application that is purely run from the console and the use from the pygame lib is not allowed my goal was to create a user experience that goes beyond a *simple* black-and-white console application.
 
