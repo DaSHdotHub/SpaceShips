@@ -25,6 +25,24 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
 - `pyfiglet`: Creating ASCII art titles.
 - `colorama`: Adding color and styles to the console output.
 
+### Extensiones used in VSCode
+- `pylint`: Linting code relevant errors.
+- `ruff`:   Formatting code on save event.
+- `settings.json` from VScode
+```json
+{
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "pylint.args": ["--max-line-length", "79"],
+    "ruff.format.args": ["--line-length", "79"],
+    "ruff.fixAll": true,
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.rulers": [79],
+    }
+}
+```
+
 ## Key Features and Algorithms
 - **SpaceShip Class**: Manages the game state, including battlefield setup, ship placement, and turn management.
 - **Ship Placement Algorithm**: Places 'L'-shaped ships randomly, ensuring they fit and don't overlap.
