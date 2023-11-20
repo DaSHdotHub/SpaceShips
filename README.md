@@ -71,8 +71,13 @@ As the task was to create an application that is purely run from the console and
 
 ## Unique Aspects to Highlight
 - **ASCII Art and Colorful Console Output**: Enhances the user experience.
+![Logo Art](assets/media/logo.webp)
 - **Adaptive Game Size and Number of Ships**: Dynamically adjusts based on battlefield size.
 - **Customizable Styles**: Uses `colorama` for easy aesthetic customization.
+![Logo Art](assets/media/colorama_example.webp)
+
+
+
 
 ### Intuitive coloring
 <div>The battlefields of user and enemy are colored differently. Even without reading what battlefield is yours, you'll notice instantly the <i>friendly</i> <ul><li><span style="background: Cyan; color: black">Cyan</span> coloring for your index and name</li><li><span style="background: Green; color: white">Green</span> coloring for you're placed SpaceShips. And also for your hits on the enemy grid.</li></ul> 
@@ -130,7 +135,20 @@ After each turn a summary is displayed, just above the updated battlefields, for
 
 End the game session.
 ### Flowchart
-![flowchart](assets/media/flowchart.webp)
+<div>
+The flowchart is grouped into two sections:
+<ol>
+<li>
+<strong style="background: #218bff">Pre initialization phase </strong>
+<p>In this phase data (user input) is gathered for the game to run correctly.</p></li>
+<li>
+<strong style="background: lightblue; color: black">Post initialization phase</strong>
+</li>
+<p>Phase 2 contains the <i>heart</i> of the game, the actual game loop</p>
+</ol>
+</div>
+<img src="assets/media/flowchart.webp" alt="flowchart of the structure">
+
 ## Testing & Validations
 ### Validations
 1. [CI Python Linter](https://pep8ci.herokuapp.com)
@@ -183,6 +201,7 @@ For deployment it is needed to add two buildpacks from the _Settings_ tab.
 
 ### Local
 
+Either clone or fork this project to your local/ cloud IDE.
 Python3 needs to be already installed for this project to run correctly,
 e.g. on Mac:
 ```code
@@ -208,4 +227,5 @@ The deployment terminal is set to 80 columns by 24 rows. That means that each li
 - **Pyfiglet** for easier figlet integration - "pyfiglet" import was used, find more information on [geeksforgeeks.org](https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/)
 - **Colorama** for bringing more than black and white to the console, have a look at [geeksforgeeks.org](https://www.geeksforgeeks.org/print-colors-python-terminal/)
 - **ui.dev** for the responsive mock for this documentation, try it on [ui.dev/amiresponsive?](https://ui.dev/amiresponsive?)
-- **convertio.co** for convertation of .jpegs to .webp format [convertio.co/](https://convertio.co/en/jpeg-webp/)
+- **convertio.co** for convertation of images to .webp format [convertio.co/](https://convertio.co/en/jpeg-webp/)
+- **lucidchart.com** for creation of the flowchart [lucidchart.com/](https://lucidchart.com/)
