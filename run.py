@@ -1,6 +1,7 @@
 # Imports
 import random
 import string
+import math
 import pyfiglet
 from colorama import Back, Fore, Style
 
@@ -56,9 +57,14 @@ class SpaceShipsGame:
         self.user_turn_data = {
             "total_hits": 0,
             "previous_attempts": set(),
+            "current_turn_attempts": set(),
             "number_of_turns": 0,
         }
-        self.computer_turn_data = {"total_hits": 0, "previous_attempts": set()}
+        self.computer_turn_data = {
+            "total_hits": 0,
+            "previous_attempts": set(),
+            "current_turn_attempts": set(),
+        }
 
         for _ in range(number_of_ships):
             self.place_spaceship(self.user_battlefield, GREEN_WHITE_STYLE)
@@ -251,6 +257,7 @@ class SpaceShipsGame:
                 continue
 
             turn_data["previous_attempts"].add((row, col))
+            self.user_turn_data["current_turn_attempts"].add((row, col))
             return row, col
 
     def computer_turn(self):
@@ -263,6 +270,8 @@ class SpaceShipsGame:
                 battlefield and turn_data in-place.
         """
         missiles_fired = 0
+        self.computer_turn_data["current_turn_attempts"].clear()
+
         size = len(self.user_battlefield)
         while (
             missiles_fired < NUMBER_OF_MISSILES
@@ -274,6 +283,7 @@ class SpaceShipsGame:
                 continue
 
             self.computer_turn_data["previous_attempts"].add((row, col))
+            self.computer_turn_data["current_turn_attempts"].add((row, col))
             result = self.fire_missile(
                 self.user_battlefield, (row, col), RED_WHITE_STYLE
             )
@@ -297,6 +307,7 @@ class SpaceShipsGame:
                 the battlefield and turn_data in-place.
         """
         missiles_fired = 0
+        self.user_turn_data["current_turn_attempts"].clear()
         self.user_turn_data["number_of_turns"] += 1
         while (
             missiles_fired < NUMBER_OF_MISSILES
@@ -330,11 +341,14 @@ class SpaceShipsGame:
             battlefield_length (int): Length of the battlefield to calculate
                 border length.
         """
-        header_length = max(len(name) + 12, battlefield_length * 2 + 8)
-        header_border = "#" * header_length
+        header_border = "##" * (
+            (battlefield_length - BATTLEFIELD_MIN_SIZE) * 2 + 11
+        )
+        border_l = "#" * math.ceil((len(header_border) - 12 - len(name)) / 2)
+        border_r = "#" * math.floor((len(header_border) - 12 - len(name)) / 2)
         print(
-            f"\n{header_border}\n{style}{name.upper()}"
-            + f" BATTLEFIELD{Style.RESET_ALL}\n{header_border}"
+            f"\n{header_border}\n{style}{border_l}{name.upper()}"
+            + f" BATTLEFIELD{border_r}{Style.RESET_ALL}\n{header_border}"
         )
 
     def print_battlefield_indices(self, battlefield, style):
@@ -387,10 +401,13 @@ class SpaceShipsGame:
         for i, row in enumerate(battlefield):
             self.print_battlefield_row(row, i, style, hide_ships)
 
-    def generate_turn_summary(self):
+    def generate_turn_summary(self, style):
         """
         Generates and prints a summary of the attempts and hits for both the
         user and the computer.
+
+        Args:
+            style (str): Style string for coloring the output
         """
 
         def format_attempts(attempts):
@@ -402,28 +419,29 @@ class SpaceShipsGame:
             )
 
         user_attempts = format_attempts(
-            self.user_turn_data["previous_attempts"]
+            self.user_turn_data["current_turn_attempts"]
         )
         computer_attempts = format_attempts(
-            self.computer_turn_data["previous_attempts"]
+            self.computer_turn_data["current_turn_attempts"]
         )
 
         user_hits = sum(
             1
-            for row, col in self.user_turn_data["previous_attempts"]
+            for row, col in self.user_turn_data["current_turn_attempts"]
             if "x" in self.computer_battlefield[row][col]
         )
         computer_hits = sum(
             1
-            for row, col in self.computer_turn_data["previous_attempts"]
+            for row, col in self.computer_turn_data["current_turn_attempts"]
             if "x" in self.user_battlefield[row][col]
         )
 
-        print("\nTurn Summary:")
-        print(f"User fired on fields {user_attempts}. Hits: {user_hits}.")
         print(
-            f"Computer fired on fields {computer_attempts}. "
-            + f"Hits: {computer_hits}."
+            f"{style}\nTurn Summary:"
+            + f"\nUser fired on fields {user_attempts}. Hits: {user_hits}."
+            + f"\nComputer fired on fields {computer_attempts}. "
+            + f"Hits: {computer_hits}"
+            + Style.RESET_ALL
         )
 
     def play_round(self):
@@ -457,12 +475,16 @@ class SpaceShipsGame:
         else:
             return
 
-        self.generate_turn_summary()
+        self.generate_turn_summary(MAGENTA_WHITE_STYLE)
 
-    def check_winner(self):
+    def check_winner(self, style):
         """
         Checks if there is a winner in the game based on the total hits
         recorded for each player.
+
+        Args:
+            style (str): Style string for coloring the output
+
 
         Returns:
             bool: Returns True if either the user or the computer has hit all
@@ -471,8 +493,10 @@ class SpaceShipsGame:
         """
         if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
             print(
-                f"\n\nCongratulations {self.username.upper()}! All enemy "
+                f"style"
+                + f"\n\nCongratulations {self.username.upper()}! All enemy "
                 + "spacecraft destroyed. You win!"
+                + Style.RESET_ALL
             )
             return True
         elif (
@@ -490,7 +514,7 @@ class SpaceShipsGame:
         and computer's turns, with the game checking for a winner after each
         round.
         """
-        while not self.check_winner():
+        while not self.check_winner(MAGENTA_WHITE_STYLE):
             self.play_round()
 
 
@@ -510,7 +534,7 @@ def get_valid_username(style):
     while True:
         username = input(
             style
-            + "\n\nWhat your name captain?, enter a username with a length "
+            + "\n\nWhat's your name captain?, enter a username with a length "
             + f"between {USERNAME_LENGTH_FLOOR} "
             + f"and {USERNAME_LENGTH_CEIL} chars:  "
             + Style.RESET_ALL
@@ -543,8 +567,8 @@ def get_valid_game_size():
             )
             if size < BATTLEFIELD_MIN_SIZE or size > BATTLEFIELD_MAX_SIZE:
                 print(
-                    f"Invalid input, please enter a number value between"
-                    f"{BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
+                    f"Invalid input, please enter a natural number between"
+                    f" {BATTLEFIELD_MIN_SIZE} and {BATTLEFIELD_MAX_SIZE}."
                 )
             else:
                 number_of_ships = size - (
@@ -572,7 +596,7 @@ def display_rules(style, username):
         + style
         + "Welcome to SpaceShips, a variant of the classic BattleShip game."
         + f"\n\nCaptain {username} you'll be tasked to defend your SpaceShips"
-        + "crossing \nenemy territory against the enemy forces. "
+        + " crossing \nenemy territory against the enemy forces. "
         + f"You're convoy are {L_SHIP}-class spaceships."
         + "\nMost likely, your enemy uses the same"
         + "\nThere will also be no intel on their orientation!"
@@ -616,4 +640,5 @@ def main():
             print("\nThank you for playing! See you next time.\n")
 
 
-main()
+if __name__ == "__main__":
+    main()
