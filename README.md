@@ -77,21 +77,25 @@ As Browsers mainly *Google Chrome* was used for testing, as on *Safari* within M
 - **Rule:** Username should be between 3 and 8 chars, it can also contain numbers and whitespaces.
 - An error will be shown when the length is not correct.
 - An error will be shown when the name contains only whitespaces
+![Validation Result Username](assets/media/validation_username.webp)
 
 #### Feature - Size of battlefield
 - **Rule:** Battlefield size should be between 4 and 10
 - An error will be shown when the size is not inside the given interval.
 - An error will be shown when the input is not a number.
 - An error will be shown when the input is not an natural number (integer).
+![Validation Result Battlefield](assets/media/validation_battlefield.webp)
 
 #### Feature - Coordinate input
 - **Rule:** Input must be of the type 'Alphanumerical'. First char must be a letter that is displayed in the index of the battlefield. The following number has to be a number from the displayed index of the battlefield.
 - An error will be shown when the input type is wrong.
 - An error will be shown when the input is out of bounds.
 - An error will be shown when the coordinate was already entered.
+![Validation Result Coordinates](assets/media/validation_coordinates.webp)
 
 #### Feature - New game
 - **Rule:** Any other input than 'yes' will quit the game.
+![Validation Result Newgame](assets/media/validation_newGame.webp)
 
 
 ## Deployment
