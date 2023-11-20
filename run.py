@@ -493,7 +493,7 @@ class SpaceShipsGame:
         """
         if self.user_turn_data["total_hits"] == self.number_of_ship_segments:
             print(
-                f"style"
+                f"{style}"
                 + f"\n\nCongratulations {self.username.upper()}! All enemy "
                 + "spacecraft destroyed. You win!"
                 + Style.RESET_ALL
