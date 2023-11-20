@@ -61,8 +61,43 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
 - **Adaptive Game Size and Number of Ships**: Dynamically adjusts based on battlefield size.
 - **Customizable Styles**: Uses `colorama` for easy aesthetic customization.
 
+## Testing & Validations
+### Validations
+1. [CI Python Linter](https://pep8ci.herokuapp.com)
+    - For this project it was mandatory to check for code errors with
+    - **Result:** All clear, no errors found.
+    ![Result CI Python Linter](assets/media/ci_python_linter.webp)
+2. **Snyk** did not find any issues on the *Code Analysis* Section.
+
+### Manual Testing
+The project was manually tested for each feature that expects an input to return the expected behaviour. 
+As Browsers mainly *Google Chrome* was used for testing, as on *Safari* within MacOS the displayed terminal application wont run properly.
+
+#### Feature - Username input:
+- **Rule:** Username should be between 3 and 8 chars, it can also contain numbers and whitespaces.
+- An error will be shown when the length is not correct.
+- An error will be shown when the name contains only whitespaces
+
+#### Feature - Size of battlefield
+- **Rule:** Battlefield size should be between 4 and 10
+- An error will be shown when the size is not inside the given interval.
+- An error will be shown when the input is not a number.
+- An error will be shown when the input is not an natural number (integer).
+
+#### Feature - Coordinate input
+- **Rule:** Input must be of the type 'Alphanumerical'. First char must be a letter that is displayed in the index of the battlefield. The following number has to be a number from the displayed index of the battlefield.
+- An error will be shown when the input type is wrong.
+- An error will be shown when the input is out of bounds.
+- An error will be shown when the coordinate was already entered.
+
+#### Feature - New game
+- **Rule:** Any other input than 'yes' will quit the game.
+
+
 ## Deployment
-- **Heroku**: For deployment it is needed to add two buildpacks from the _Settings_ tab.
+### Heroku 
+For deployment it is needed to add two buildpacks from the _Settings_ tab.
+
     1. `heroku/python`
     2. `heroku/nodejs`
     __________________
@@ -71,6 +106,20 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
     For this repository, no credentials were used so far, in case thouse will be added in the future it is necesarry to create in Heroku a _Config Var_ called `CREDS` and paste the JSON into the value field.
     __________________
     After e.g. the GitHub repository was connected and the correct repo was chosen it can be deployed as normal.
+
+### Local
+
+Python3 needs to be already installed for this project to run correctly,
+e.g. on Mac:
+```code
+brew install python3
+```
+In a terminal navigated in the root directory of this project type in and enter.
+```code
+python3 run.py
+```
+
+
 
 ## Constraints
 
@@ -85,3 +134,4 @@ The deployment terminal is set to 80 columns by 24 rows. That means that each li
 - **Pyfiglet** for easier figlet integration - "pyfiglet" import was used, find more information on [geeksforgeeks.org](https://www.geeksforgeeks.org/python-ascii-art-using-pyfiglet-module/)
 - **Colorama** for bringing more than black and white to the console, have a look at [geeksforgeeks.org](https://www.geeksforgeeks.org/print-colors-python-terminal/)
 - **ui.dev** for the responsive mock for this documentation, try it on [ui.dev/amiresponsive?](https://ui.dev/amiresponsive?)
+- **convertio.co** for convertation of .jpegs to .webp format [convertio.co/](https://convertio.co/en/jpeg-webp/)
