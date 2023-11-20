@@ -66,6 +66,22 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
 - **Adaptive Game Size and Number of Ships**: Dynamically adjusts based on battlefield size.
 - **Customizable Styles**: Uses `colorama` for easy aesthetic customization.
 
+### Intuitive coloring
+<div>The battlefields of user and enemy are colored differently. Even without reading what battlefield is yours, you'll notice instantly the <i>friendly</i> <ul><li><span style="background: Cyan; color: black">Cyan</span> coloring for your index and name</li><li><span style="background: Green; color: white">Green</span> coloring for you're placed SpaceShips. And also for your hits on the enemy grid.</li></ul> 
+</div>
+<div>
+Your enemy will be colored in <i>classic</i>
+<ul><li><span style="background: Red; color: white">Red</span> coloring for the enemy index as well as when the enemy hits one of your SpaceShips</li></ul>
+</div>
+<img src="assets/media/coloring.webp" alt="Battlefield overview user vs enemy">
+<div>
+<br>
+After each turn a summary is displayed, just above the updated battlefields, for small battlefield it can instantly be seen, when playing a bigger battlefield scrolling upwards is necesarry.
+<ul><li><span style="background: Magenta; color: white">Magenta</span> is the color that highlights important information througout the game</li></ul>
+<img src="assets/media/turn_summary.webp" alt="Turn summary of user and enemy">
+</div>
+
+
 ## Testing & Validations
 ### Validations
 1. [CI Python Linter](https://pep8ci.herokuapp.com)
