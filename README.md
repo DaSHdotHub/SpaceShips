@@ -7,11 +7,15 @@ While in the *classic* variant it would be a tedious singlehit vs singlehit batt
 <br>
 As the task was to create an application that is purely run from the console and the use from the pygame lib is not allowed my goal was to create a user experience that goes beyond a *simple* black-and-white console application.
 
+## [Navigate to GitHub Page](https://github.com/DaSHdotHub/SpaceShips/)
+## [Navigate to live deployment on Heroku](https://space-ships-ds-f3f4ae43bcdf.herokuapp.com/)
+
 ![Responsive Mock](assets/media/responsive.webp)
 
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Goals](#goals)
 - [Technologies and Libraries Used](#technologies-and-libraries-used)
   - [Python Standard Libraries](#python-standard-libraries)
   - [External Libraries](#external-libraries)
@@ -28,7 +32,21 @@ As the task was to create an application that is purely run from the console and
   - [Manual Testing Validations](#manual-testing)
 - [Credits](#credits)
 
+## Goals
+All of the following goals were achieved for this project.
+- Create a logical game similar to the classic "battleships"
+- Two grids, one for the user and one for the computer
+- Locations of enemy targets are concealed from the user.
+- User takes turns to 'missile' down enemy targets.
+- Competion against a computer.
+- The party disabling all enemy targets first, wins.
+____________________________
+- Intuitive design, the game follows a certain structure where the user is guided throughout the game.
+- Defensive design, all inputs are validated and a feedback is shown wether the input was correct or not.
+- After a game is completed it is possible to continue playing without the need to restart the console. 
+
 ## Technologies and Libraries Used
+
 ### Python Standard Libraries
 - `random`: For generating random numbers (ship placement, computer's moves).
 - `string`: Handling strings, particularly for battlefield coordinates.
@@ -75,8 +93,6 @@ As the task was to create an application that is purely run from the console and
 - **Adaptive Game Size and Number of Ships**: Dynamically adjusts based on battlefield size.
 - **Customizable Styles**: Uses `colorama` for easy aesthetic customization.
 ![Logo Art](assets/media/colorama_example.webp)
-
-
 
 
 ### Intuitive coloring
