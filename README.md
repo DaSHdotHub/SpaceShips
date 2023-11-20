@@ -11,9 +11,14 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
 - [Technologies and Libraries Used](#technologies-and-libraries-used)
   - [Python Standard Libraries](#python-standard-libraries)
   - [External Libraries](#external-libraries)
+  - [Extentions used in VSCode](#extensiones-used-in-vscode)
 - [Key Features and Algorithms](#key-features-and-algorithms)
 - [Project Structure](#project-structure)
 - [Unique Aspects to Highlight](#unique-aspects-to-highlight)
+- [Testing & Validations](#testing--validations)
+  - [Semiautomatic Testing](#validations)
+  - [Manual Testing Validations](#manual-testing)
+- [Credits](#credits)
 
 ## Technologies and Libraries Used
 ### Python Standard Libraries
@@ -69,7 +74,7 @@ SpaceShips is a variant of the classic "Battleship" game where players aim to de
     ![Result CI Python Linter](assets/media/ci_python_linter.webp)
 2. **Snyk** did not find any issues on the *Code Analysis* Section.
 
-### Manual Testing
+### Manual Testing Validations
 The project was manually tested for each feature that expects an input to return the expected behaviour. 
 As Browsers mainly *Google Chrome* was used for testing, as on *Safari* within MacOS the displayed terminal application wont run properly.
 
