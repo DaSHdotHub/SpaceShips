@@ -544,6 +544,8 @@ def get_valid_username(style):
             or len(username) > USERNAME_LENGTH_CEIL
         ):
             print("Your username does not meet the length requirement")
+        elif username.isspace():
+            print("Your username contains only whitespaces, try again.")
         else:
             return username
 
